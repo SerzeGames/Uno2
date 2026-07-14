@@ -548,16 +548,25 @@ function drawHands(){
     const count = state.dealing ? Math.min(state.revealed[seat]|0, total) : total;
     const rects=layoutHand(seat,total);
     if(seat===0){
-      for(let i=0;i<count;i++){
-        const c=hands[seat][i], r=rects[i]; live[c.id]=1;
-        if(flyingIds[c.id]) continue;                        // en vol (0/7) : dessinée par l'animation, pas dans l'éventail
-        if(state.dealing){ const pp=easePos(c.id, r.cx, r.cy, L.cw, 0); drawCard(spriteKey(c), pp.x-L.cw/2, pp.y-L.ch/2, L.cw, L.ch, pp.rot, {}); continue; }
-        const playable=humanCanPlay(c);
-        const hovered=(state.hoverIdx===i && playable);
+      // marque toutes les cartes "live" (y compris en vol), puis rend en 2 passes :
+      // NON jouables d'abord, JOUABLES au-dessus, survolée tout au-dessus → jouables jamais cachées
+      const pf=[];
+      for(let i=0;i<count;i++){ const c=hands[seat][i]; live[c.id]=1; pf[i]= !state.dealing && humanCanPlay(c); }
+      const drawSeat0=(i)=>{
+        const c=hands[seat][i], r=rects[i];
+        if(flyingIds[c.id]) return;                          // en vol (0/7) : dessinée par l'animation
+        if(state.dealing){ const pp=easePos(c.id, r.cx, r.cy, L.cw, 0); drawCard(spriteKey(c), pp.x-L.cw/2, pp.y-L.ch/2, L.cw, L.ch, pp.rot, {}); return; }
+        const playable=pf[i], hovered=(state.hoverIdx===i && playable);
         let lift = playable ? -7 : 0; if(hovered) lift=-24;
         const glow = playable ? (c.color==='wild'?THEME.wild:COLOR_HEX[c.color]) : null;
         const pp=easePos(c.id, r.cx, r.cy+lift, L.cw, 0);
         drawCard(spriteKey(c), pp.x-L.cw/2, pp.y-L.ch/2, L.cw, L.ch, pp.rot, { glow, dim: playable?0:0.5 });
+      };
+      if(state.dealing){ for(let i=0;i<count;i++) drawSeat0(i); }
+      else {
+        for(let i=0;i<count;i++){ if(!pf[i]) drawSeat0(i); }                       // non jouables (dessous)
+        for(let i=0;i<count;i++){ if(pf[i] && i!==state.hoverIdx) drawSeat0(i); }   // jouables (au-dessus)
+        if(state.hoverIdx>=0 && state.hoverIdx<count && pf[state.hoverIdx]) drawSeat0(state.hoverIdx);
       }
     } else {
       const w=rects.length?rects[0].w:L.ocw, h=w/cardAR();
@@ -1107,9 +1116,11 @@ function hitBtn(name, x, y){ const b=L.buttons[name]; return b && x>=b.x && x<=b
 function hitHumanCard(x,y){
   const count=hands[0].length; if(!count) return -1;
   const rects=layoutHand(0,count);
-  for(let i=count-1;i>=0;i--){ const r=rects[i];
-    if(x>=r.cx-L.cw/2 && x<=r.cx+L.cw/2 && y>=r.cy-L.ch/2-26 && y<=r.cy+L.ch/2) return i;
-  }
+  const within=(i)=>{ const r=rects[i]; return x>=r.cx-L.cw/2 && x<=r.cx+L.cw/2 && y>=r.cy-L.ch/2-26 && y<=r.cy+L.ch/2; };
+  // même ordre que le rendu (jouables au-dessus) : survolée > jouables (droite→gauche) > non jouables (droite→gauche)
+  if(state.hoverIdx>=0 && state.hoverIdx<count && within(state.hoverIdx)) return state.hoverIdx;
+  for(let i=count-1;i>=0;i--){ if(i!==state.hoverIdx && humanCanPlay(hands[0][i]) && within(i)) return i; }
+  for(let i=count-1;i>=0;i--){ if(!humanCanPlay(hands[0][i]) && within(i)) return i; }
   return -1;
 }
 function pos(e){
@@ -1316,17 +1327,23 @@ function reshuffleIfNeeded(){
 function drawOne(){ reshuffleIfNeeded(); return drawPile.length? drawPile.pop() : null; }
 
 async function drawToHand(pi, n, reason){
+  const tok=runToken;
   const drawn=[];
-  for(let k=0;k<n;k++){
-    const card=drawOne(); if(!card) break; drawn.push(card);
-    Sound.draw();
-    const tgt=seatTarget(pi);
-    await animate({ type:'card', faceDown:true, key:'back',
-      cx0:L.draw.x+L.draw.w/2, cy0:L.draw.y+L.draw.h/2, cx1:tgt.cx, cy1:tgt.cy,
-      w0:L.cw, w1:tgt.w, r0:0, r1:tgt.rot, dur:(n>2?150:230),
-      onEnd:()=>{ hands[pi].push(card); cardPos[card.id]={x:tgt.cx,y:tgt.cy,w:tgt.w,rot:tgt.rot}; } });
+  for(let k=0;k<n;k++){ const card=drawOne(); if(!card) break; drawn.push(card); }
+  if(drawn.length){
+    netEmit({ev:'draw', seat:pi, n:drawn.length, cards:drawn.map(packCard)});
+    netFlushEventsOnly();                                     // le client anime EN MÊME TEMPS (même cadence que predictDraw*)
   }
-  if(drawn.length) netEmit({ev:'draw', seat:pi, n:drawn.length, cards:drawn.map(packCard)});
+  const tgt=seatTarget(pi), dur=(drawn.length>2?150:230), stag=Math.min(dur,150);
+  const proms=drawn.map((card,k)=>new Promise(res=>setTimeout(()=>{
+    if(!state || tok!==runToken){ res(); return; }            // partie relancée : on abandonne (ne pas corrompre la nouvelle main)
+    Sound.draw();
+    animate({ type:'card', faceDown:true, key:'back',
+      cx0:L.draw.x+L.draw.w/2, cy0:L.draw.y+L.draw.h/2, cx1:tgt.cx, cy1:tgt.cy,
+      w0:L.cw, w1:tgt.w, r0:0, r1:tgt.rot, dur,
+      onEnd:()=>{ if(state && tok===runToken){ hands[pi].push(card); cardPos[card.id]={x:tgt.cx,y:tgt.cy,w:tgt.w,rot:tgt.rot}; } res(); } });
+  }, k*stag)));
+  await Promise.all(proms);
   return drawn;
 }
 
@@ -2236,23 +2253,36 @@ function buildViewFor(viewer){
   }
   return v;
 }
+function rotEvsFor(seat, evs){
+  const revs=[];
+  for(const ev of evs){
+    if(ev.ev==='penalty') continue;                       // couvert par la vue
+    if(ev.ev==='reveal'){ revs.push({ev:'reveal', hands:[0,1,2,3].map(k=>ev.hands[(seat+k)%4])}); continue; }
+    const e=Object.assign({}, ev);
+    if('seat' in e) e.seat=rotSeat(ev.seat, seat);
+    if('a' in e) e.a=rotSeat(ev.a, seat);                 // swap : deux sièges
+    if('b' in e) e.b=rotSeat(ev.b, seat);
+    if(ev.ev==='draw' && e.seat!==0) delete e.cards;      // cartes privées : seulement pour le piocheur
+    revs.push(e);
+  }
+  return revs;
+}
 function netFlush(){
   if(NET.role!=='host' || !state) return;
   const evs=NET.rawEvs; NET.rawEvs=[];
   for(const pl of NET.players){
-    if(!pl.conn) continue;                                  // hôte local
-    const revs=[];
-    for(const ev of evs){
-      if(ev.ev==='penalty') continue;                       // couvert par la vue
-      if(ev.ev==='reveal'){ revs.push({ev:'reveal', hands:[0,1,2,3].map(k=>ev.hands[(pl.seat+k)%4])}); continue; }
-      const e=Object.assign({}, ev);
-      if('seat' in e) e.seat=rotSeat(ev.seat, pl.seat);
-      if('a' in e) e.a=rotSeat(ev.a, pl.seat);              // swap : deux sièges
-      if('b' in e) e.b=rotSeat(ev.b, pl.seat);
-      if(ev.ev==='draw' && e.seat!==0) delete e.cards;      // cartes privées : seulement pour le piocheur
-      revs.push(e);
-    }
-    try{ pl.conn.send({t:'q', evs:revs, view:buildViewFor(pl.seat)}); }catch(err){}
+    if(!pl.conn) continue;                                 // hôte local
+    try{ pl.conn.send({t:'q', evs:rotEvsFor(pl.seat, evs), view:buildViewFor(pl.seat)}); }catch(err){}
+  }
+}
+// Envoie tout de suite les événements d'animation en attente SANS la vue (état diffusé en fin de tour) :
+// permet aux clients d'animer EN MÊME TEMPS que l'hôte, pas après son animation.
+function netFlushEventsOnly(){
+  if(NET.role!=='host' || !state) return;
+  const evs=NET.rawEvs; if(!evs.length) return; NET.rawEvs=[];
+  for(const pl of NET.players){
+    if(!pl.conn) continue;
+    try{ pl.conn.send({t:'q', evs:rotEvsFor(pl.seat, evs), view:null}); }catch(err){}
   }
 }
 function netRoundStart(first){
@@ -2485,9 +2515,15 @@ function hostStartMatch(){
 function predictPlay(idx){
   const card=hands[0][idx]; if(!card) return;
   card._rot=(Math.random()*8-4)*Math.PI/180;
-  NET.pred.plays[card.id]={ t:performance.now(), card };
   if(card.type==='wild'||card.type==='wild4') NET.pred.wildId=card.id;
-  clientPlay(0, card);                                     // même vol de carte que la version confirmée
+  const d=cardPos[card.id]; const src = d?{cx:d.x,cy:d.y,w:d.w,rot:d.rot}:seatTarget(0);
+  const i=hands[0].indexOf(card); if(i>=0) hands[0].splice(i,1);        // retire de la main IMMÉDIATEMENT (fluide)
+  NET.pred.plays[card.id]={ t:performance.now(), card };
+  Sound[(card.color==='wild'||card.type!=='number')?'special':'play']();
+  animate({ type:'card', faceDown:false, key:spriteKey(card), toTop:true,   // vol optimiste vers la défausse dès le clic
+    cx0:src.cx, cy0:src.cy, cx1:L.discard.x+L.discard.w/2, cy1:L.discard.y+L.discard.h/2,
+    w0:src.w||L.cw, w1:L.cw, r0:src.rot||0, r1:card._rot, dur:260,
+    onEnd:()=>{ if(!discard.find(dd=>dd.id===card.id)) discard.push(card); } });
 }
 function predictDraw(){
   NET.pred.draw++;
@@ -2497,6 +2533,19 @@ function predictDraw(){
   animate({ type:'card', faceDown:true, key:'back',
     cx0:L.draw.x+L.draw.w/2, cy0:L.draw.y+L.draw.h/2, cx1:tgt.cx, cy1:tgt.cy,
     w0:L.cw, w1:tgt.w, r0:0, r1:0, dur:230 });
+}
+function predictDrawPile(n){                                 // encaisse une pile de + : vol immédiat côté client (simultané avec l'hôte)
+  NET.pred.draw++;                                           // un seul événement 'draw' (avec n cartes) sera consommé
+  state.pendingDraw=0; state.pendingKind=null; state.pendingUnit=0;   // pile encaissée (optimiste)
+  const tgt=seatTarget(0), dur=(n>2?150:230), stag=Math.min(dur, 150);
+  for(let k=0;k<n;k++){
+    setTimeout(()=>{ if(!state) return;
+      Sound.draw();
+      animate({ type:'card', faceDown:true, key:'back',
+        cx0:L.draw.x+L.draw.w/2, cy0:L.draw.y+L.draw.h/2, cx1:tgt.cx, cy1:tgt.cy,
+        w0:L.cw, w1:tgt.w, r0:0, r1:0, dur });
+    }, k*stag);
+  }
 }
 function predictRecolor(color){
   const id=NET.pred.wildId; if(!id) return;
@@ -2509,9 +2558,9 @@ function netPredict(kind, val){
   try{
     if(kind==='turn'){
       if(val && val.type==='play') predictPlay(val.idx);
-      else if(val && val.type==='draw' && state.pendingDraw===0) predictDraw();
+      else if(val && val.type==='draw'){ if(state.pendingDraw>0) predictDrawPile(state.pendingDraw); else predictDraw(); }
     } else if(kind==='drewPlayable' && val && val.type==='play') predictPlay(val.idx);
-    else if(kind==='color') predictRecolor(val);
+    else if(kind==='color'){ predictRecolor(val); if(state) state.phase='resolving'; }   // referme le sélecteur de couleur tout de suite
   }catch(e){}
 }
 
