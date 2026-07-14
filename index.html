@@ -2533,7 +2533,7 @@ function predictDraw(){
   animate({ type:'card', faceDown:true, key:'back',
     cx0:L.draw.x+L.draw.w/2, cy0:L.draw.y+L.draw.h/2, cx1:tgt.cx, cy1:tgt.cy,
     w0:L.cw, w1:tgt.w, r0:0, r1:0, dur:230 });
-  NET.pred.drawLandAt = performance.now()+230;                // les vraies cartes (événement) se posent à l'atterrissage du dos, pas avant
+  NET.pred.drawSched={ t0:performance.now(), stag:0, dur:230 };   // chaque vraie carte se pose à l'atterrissage de SON dos
 }
 function predictDrawPile(n){                                 // encaisse une pile de + : vol immédiat côté client (simultané avec l'hôte)
   NET.pred.draw++;                                           // un seul événement 'draw' (avec n cartes) sera consommé
@@ -2547,7 +2547,7 @@ function predictDrawPile(n){                                 // encaisse une pil
         w0:L.cw, w1:tgt.w, r0:0, r1:0, dur });
     }, k*stag);
   }
-  NET.pred.drawLandAt = performance.now() + (n-1)*stag + dur; // fin du vol des dos → moment où poser les vraies cartes
+  NET.pred.drawSched={ t0:performance.now(), stag, dur };    // chaque carte se pose à l'atterrissage de son dos → une par une, en direct
 }
 function predictRecolor(color){
   const id=NET.pred.wildId; if(!id) return;
@@ -2679,11 +2679,15 @@ async function clientDrawAnim(seatVi, n, cards){
   if(seatVi===0 && cards && NET.pred.draw>0){
     NET.pred.draw=Math.max(0, NET.pred.draw-1);
     const tok=runToken, tgt=seatTarget(0);
-    const place=()=>{ if(!state||tok!==runToken) return;
-      for(const pc of cards){ const card=unpackCard(pc);
-        if(!hands[0].find(h=>h.id===card.id)){ hands[0].push(card); cardPos[card.id]={x:tgt.cx,y:tgt.cy,w:tgt.w,rot:0}; } } };  // dedup si la vue a déjà posé
-    const delay=Math.max(0, (NET.pred.drawLandAt||0) - performance.now());
-    if(delay>10) setTimeout(place, delay); else place();      // pose les vraies cartes à l'atterrissage du vol optimiste (jamais avant)
+    const sched=NET.pred.drawSched||{ t0:performance.now(), stag:150, dur:150 };
+    cards.forEach((pc,k)=>{                                  // chaque carte se pose quand SON dos atterrit (une par une, en direct)
+      const card=unpackCard(pc);
+      const landAt=sched.t0 + k*sched.stag + sched.dur;
+      const delay=Math.max(0, landAt - performance.now());
+      const place=()=>{ if(!state||tok!==runToken) return;
+        if(!hands[0].find(h=>h.id===card.id)){ hands[0].push(card); cardPos[card.id]={x:tgt.cx,y:tgt.cy,w:tgt.w,rot:0}; } };  // dedup si la vue a déjà posé
+      if(delay>10) setTimeout(place, delay); else place();
+    });
     return;
   }
   if(seatVi===0 && cards){
