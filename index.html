@@ -246,6 +246,7 @@ async function mercyCheck(){
     if(!state.eliminated[k] && hands[k].length>=25){
       toast(NAMES[k]+' atteint 25 cartes — ÉLIMINÉ !'); Sound.error();
       const toss=hands[k].slice();                            // toute sa main part à la défausse d'abord…
+      netEmit({ev:'mercy_dump', seat:k, cards:toss.map(packCard)}); netFlushEventsOnly();   // le client anime le dump EN MÊME TEMPS
       await flyCardsToDiscard(k, toss, {below:true, sound:'special', dur:200});   // …sous la carte du dessus (60 fps)
       if(!state) return true;
       state.eliminated[k]=true; hands[k]=[];                  // …puis seulement il est déclaré éliminé
@@ -1568,7 +1569,7 @@ async function applyEffectNM(card, pi, colorBefore){
       const col=card.color;
       const toss=hands[pi].filter(c=>effColor(c)===col);     // la carte Discard All est déjà posée au sommet
       toast(NAMES[pi]+' défausse tout le '+COLOR_FR[col]+' ('+toss.length+')');
-      netEmit({ev:'drawall', seat:pi, color:col});
+      netEmit({ev:'drawall', seat:pi, color:col, cards:toss.map(packCard)}); netFlushEventsOnly();   // le client anime EN MÊME TEMPS
       await flyCardsToDiscard(pi, toss, {below:true, sound:'special'});   // vol 60 fps → sous la carte Discard All jouée
       if(!state) return;
       if(hands[pi].length===0){ await endGame(pi); return; }
@@ -1580,10 +1581,10 @@ async function applyEffectNM(card, pi, colorBefore){
       if(card.value===0){
         const order=aliveRing(state.dir);
         toast('Tous passent leur main (sens du jeu)');
-        netEmit({ev:'handspass', dir:state.dir});
         const moving=[];
         for(const s of order) for(const c of hands[s]) moving.push(c);   // toutes les cartes en jeu changent de main
         passHands(state.dir);                                            // rotation des mains (joueurs en jeu uniquement)
+        netEmit({ev:'handspass', dir:state.dir}); netFlushEventsOnly();   // mains déjà tournées → le client anime EN MÊME TEMPS
         await animateDealInto(moving);                                    // chaque carte se pose dans sa nouvelle main (60 fps)
         if(!state) return;
         state.current=nextIdx(pi);
@@ -1606,9 +1607,9 @@ async function sevenSwap(pi){                                // Carte 7 : échan
   if(!state) return;
   if(!others.includes(target)) target=others[0];
   toast(NAMES[pi]+' échange sa main avec '+NAMES[target]);
-  netEmit({ev:'swap', a:pi, b:target});
+  const tmp=hands[pi]; hands[pi]=hands[target]; hands[target]=tmp;   // échange des mains d'abord
+  netEmit({ev:'swap', a:pi, b:target}); netFlushEventsOnly();   // mains déjà échangées → le client anime EN MÊME TEMPS
   const moving=[...hands[pi], ...hands[target]];             // toutes les cartes des deux mains changent de siège
-  const tmp=hands[pi]; hands[pi]=hands[target]; hands[target]=tmp;   // échange des mains
   await animateDealInto(moving);                             // chaque carte vole vers son nouvel éventail et s'y pose (60 fps)
   if(!state) return;
   if(hands[pi].length===0){ await endGame(pi); return; }
@@ -1651,20 +1652,20 @@ async function animateSwap(a, b){
 }
 // Roulette : pioche animée carte par carte (face visible) jusqu'à révéler la couleur choisie.
 async function drawRevealToHand(victim, color){
-  let n=0;
-  while(n<40){
-    const c=drawOne(); if(!c) break; n++;
-    const match=(effColor(c)===color);
-    const tgt=seatTarget(victim);                            // recalculé : l'éventail grossit à chaque carte
+  const drawn=[];
+  while(drawn.length<40){ const c=drawOne(); if(!c) break; drawn.push(c); if(effColor(c)===color) break; }   // s'arrête à la couleur trouvée
+  if(drawn.length){ netEmit({ev:'roulette_reveal', seat:victim, color, cards:drawn.map(packCard)}); netFlushEventsOnly(); }   // le client révèle EN MÊME TEMPS
+  const tok=runToken;
+  for(const c of drawn){
+    const match=(effColor(c)===color), tgt=seatTarget(victim);   // recalculé : l'éventail grossit à chaque carte
     if(!prefersReduced) Sound[match?'special':'draw']();
     await animate({ type:'card', faceDown:false, key:spriteKey(c),   // face visible = révélation publique
       cx0:L.draw.x+L.draw.w/2, cy0:L.draw.y+L.draw.h/2, cx1:tgt.cx, cy1:tgt.cy,
       w0:L.cw, w1:tgt.w, r0:0, r1:tgt.rot, dur:match?300:200,
-      onEnd:()=>{ hands[victim].push(c); cardPos[c.id]={x:tgt.cx,y:tgt.cy,w:tgt.w,rot:tgt.rot}; } });
-    if(!state) return n;
-    if(match) break;                                         // s'arrête dès la couleur trouvée
+      onEnd:()=>{ if(state&&tok===runToken){ hands[victim].push(c); cardPos[c.id]={x:tgt.cx,y:tgt.cy,w:tgt.w,rot:tgt.rot}; } } });
+    if(!state) return drawn.length;
   }
-  return n;
+  return drawn.length;
 }
 async function colorRoulette(pi){                            // Joker Roulette : le SUIVANT choisit une couleur, révèle jusqu'à la trouver
   const victim=nextIdx(pi);
@@ -1672,17 +1673,18 @@ async function colorRoulette(pi){                            // Joker Roulette :
   let color;
   const ctl=seatCtl[victim].kind;
   if(ctl==='local'){                                         // c'est à MOI de choisir → sélecteur de couleur
+    broadcastCenter(null, THEME.gold, 20000, true, NAMES[victim]+' doit choisir une couleur…');   // les autres voient le message (moi : le sélecteur)
     state.phase='rouletteColor'; state.roulette={by:pi}; netFlush();
     color=await waitInput('color'); state.roulette=null;
     if(!state) return;
     state.phase='resolving';                                 // referme le sélecteur avant la révélation animée
   } else if(ctl==='remote'){
     state.phase='remoteRoulette'; state.roulette={by:pi};
-    centerMessage(vname+' doit choisir une couleur…', THEME.gold);
+    broadcastCenter(vname+' doit choisir une couleur…', THEME.gold, 20000);
     color=await waitRemote(victim,'color', c=>COLORS.includes(c), aiChooseColor(hands[victim]));
     state.roulette=null; if(!state) return;
   } else {                                                   // IA : suspense « réflexion » quelques secondes
-    centerMessage(vname+' doit choisir une couleur…', THEME.gold);
+    broadcastCenter(vname+' doit choisir une couleur…', THEME.gold, 20000);
     await sleep(prefersReduced?0:1600);
     if(!state) return;
     color=aiChooseColor(hands[victim]);
@@ -1691,13 +1693,12 @@ async function colorRoulette(pi){                            // Joker Roulette :
   state.currentColor=color;                                  // la couleur choisie devient la couleur à suivre
   const rc=top(); if(rc && rc.color==='wild'){ rc.chosenColor=color; delete rc.__key; }   // la carte Roulette prend la couleur → effColor(top) = couleur à suivre pour le joueur suivant
   const chsub=(victim===0)?'Vous avez':NAMES[victim]+' a';
-  centerMessage(chsub+' choisi '+COLOR_FR[color]+' !', COLOR_HEX[color]);
+  broadcastCenter(chsub+' choisi '+COLOR_FR[color]+' !', COLOR_HEX[color], 2400, false, NAMES[victim]+' a choisi '+COLOR_FR[color]+' !');
   await sleep(prefersReduced?0:1100);
   if(!state) return;
   toast(vname+' révèle la pioche jusqu\'au '+COLOR_FR[color]+'…');
-  const n=await drawRevealToHand(victim, color);             // pioche carte par carte, animée (aussi quand c'est contre moi)
+  const n=await drawRevealToHand(victim, color);             // pioche carte par carte, animée (aussi quand c'est contre moi) + diffusée aux clients
   if(!state) return;
-  netEmit({ev:'roulette', seat:victim, color, n});
   const vverb=(victim===0)?'piochez':'pioche';
   toast(vname+' '+vverb+' '+n+' carte'+(n>1?'s':'')+' — tour passé');   // la couleur trouvée n'est PAS jouée
   if(await mercyCheck()) return;
@@ -1805,9 +1806,9 @@ function resolveVuln(penalize, protester){
   }
 }
 function centerMessage(text,color,ms){ ms=ms||2800; state.centerMsg={ text, color:color||THEME.bad, t0:performance.now(), until:performance.now()+ms }; }
-function broadcastCenter(text,color,ms,skipLocal){        // message central + diffusion immédiate aux clients (le sélecteur le recouvre chez celui qui choisit)
+function broadcastCenter(text,color,ms,skipLocal,netText){  // message central + diffusion immédiate aux clients (le sélecteur le recouvre chez celui qui choisit)
   if(!skipLocal) centerMessage(text,color,ms);
-  netEmit({ev:'cmsg', text, color:color||THEME.bad, ms:ms||2800});
+  netEmit({ev:'cmsg', text:netText||text, color:color||THEME.bad, ms:ms||2800});
   netFlushEventsOnly();
 }
 
@@ -2268,6 +2269,8 @@ function rotEvsFor(seat, evs){
   for(const ev of evs){
     if(ev.ev==='penalty') continue;                       // couvert par la vue
     if(ev.ev==='reveal'){ revs.push({ev:'reveal', hands:[0,1,2,3].map(k=>ev.hands[(seat+k)%4])}); continue; }
+    if(ev.ev==='handspass'){ const e2=Object.assign({},ev); e2.myNewHand=hands[seat].map(packCard); e2.counts=[0,1,2,3].map(k=>hands[(seat+k)%4].length); revs.push(e2); continue; }   // 0 : ma nouvelle main + comptes tournés
+    if(ev.ev==='swap'){ const e2=Object.assign({},ev); e2.a=rotSeat(ev.a,seat); e2.b=rotSeat(ev.b,seat); if(seat===ev.a||seat===ev.b) e2.myNewHand=hands[seat].map(packCard); e2.counts=[0,1,2,3].map(k=>hands[(seat+k)%4].length); revs.push(e2); continue; }   // 7 : nouvelle main pour les 2 concernés
     const e=Object.assign({}, ev);
     if('seat' in e) e.seat=rotSeat(ev.seat, seat);
     if('a' in e) e.a=rotSeat(ev.a, seat);                 // swap : deux sièges
@@ -2616,11 +2619,11 @@ async function handleNetEv(ev){
     case 'play': if(state) await clientPlay(ev.seat, unpackCard(ev.card)); break;
     case 'recolor': { const c=discard.find(d=>d.id===ev.card.id); if(c){ const u=unpackCard(ev.card); Object.assign(c,u); } break; }
     case 'draw': if(state) await clientDrawAnim(ev.seat, ev.n, ev.cards); break;
-    case 'drawall': if(state){ Sound.special();                       // Défausse tout : la vue rétablira les comptes
-      if(ev.seat===0){ hands[0]=hands[0].filter(c=>effColor(c)!==ev.color); } } break;
-    case 'handspass': if(state){ Sound.special(); } break;            // 0 : la vue met à jour ma main
-    case 'swap': if(state){ await clientSwapFlourish(ev.a, ev.b); } break;   // 7 : flourish visuel ; la vue rétablit les deux mains
-    case 'roulette': if(state){ Sound.special(); } break;
+    case 'drawall': if(state) await clientFlyToDiscard(ev.seat, ev.cards, {below:true, faceUp:true, sound:'special'}); break;   // Défausse tout : vol carte par carte
+    case 'mercy_dump': if(state) await clientFlyToDiscard(ev.seat, ev.cards, {below:true, faceUp:true, sound:'special', dur:200}); break;   // élimination : dump animé sous la carte du dessus
+    case 'handspass': if(state) await clientPassHands(ev.dir, ev.myNewHand, ev.counts); break;   // 0 : toutes les mains tournent (animé)
+    case 'swap': if(state) await clientSwap(ev.a, ev.b, ev.myNewHand, ev.counts); break;   // 7 : échange animé des deux mains
+    case 'roulette_reveal': if(state) await clientRevealToHand(ev.seat, ev.cards, ev.color); break;   // Roulette : révélation face visible carte par carte
     case 'eliminated': if(state){ Sound.error(); if(state.eliminated) state.eliminated[ev.seat]=true; } break;
     case 'reveal': {
       if(!state) break;
@@ -2685,6 +2688,110 @@ async function clientSwapFlourish(a,b){                     // 7 (client) : dos 
     proms.push(animate({type:'card', faceDown:true, key:'back', cx0:B.cx-off,cy0:B.cy, cx1:A.cx-off,cy1:A.cy, w0:L.ocw,w1:L.ocw, r0:0,r1:0, dur:300}));
   }
   await Promise.all(proms);
+}
+// ---------- Parité d'animation No Mercy côté client (mêmes vols qu'en solo) ----------
+function fillPlaceholders(seatVi, n){ hands[seatVi]=[]; for(let i=0;i<(n||0);i++) hands[seatVi].push({id:'op'+seatVi+'_'+(CARD_ID++)}); }
+async function clientFlyToDiscard(seatVi, cardsPacked, opt){   // cartes d'un siège → défausse (Défausse tout, dump d'élimination)
+  opt=opt||{};
+  const below=(opt.below!==false), faceUp=(opt.faceUp!==false);
+  const cards=(cardsPacked||[]).map(unpackCard);
+  if(!cards.length) return;
+  const removeFromHand=()=>{
+    if(seatVi===0){ for(const c of cards){ const i=hands[0].findIndex(h=>h.id===c.id); if(i>=0) hands[0].splice(i,1); } }
+    else { for(let k=0;k<cards.length && hands[seatVi].length; k++) hands[seatVi].pop(); }
+  };
+  if(prefersReduced){ removeFromHand(); for(const c of cards) insertDiscard(c, below); return; }
+  const rects=layoutHand(seatVi, hands[seatVi].length);
+  const srcs=cards.map((c,i)=>{
+    let idx=hands[seatVi].findIndex(h=>h.id===c.id);         // siège 0 : vraie carte par id ; adversaire : slot i
+    if(idx<0) idx=Math.min(i, Math.max(0,hands[seatVi].length-1));
+    const r=(idx>=0 && rects[idx]) ? rects[idx] : seatTarget(seatVi);
+    return {cx:r.cx, cy:r.cy, w:r.w||(seatVi===0?L.cw:L.ocw), rot:r.rot||0};
+  });
+  removeFromHand();
+  const STAG=clamp(480/cards.length,16,55), DUR=Math.max(150,opt.dur||220), base=discardDropCenter();
+  Sound[opt.sound||'special']();
+  const tok=runToken;
+  const proms=cards.map((c,i)=>new Promise(res=>setTimeout(()=>{
+    if(!state||tok!==runToken){ res(); return; }
+    animate({ type:'card', faceDown:!faceUp, key:faceUp?spriteKey(c):'back',
+      cx0:srcs[i].cx, cy0:srcs[i].cy, cx1:base.cx, cy1:base.cy,
+      w0:srcs[i].w, w1:L.cw, r0:srcs[i].rot, r1:base.rot, dur:DUR,
+      onEnd:()=>{ if(state&&tok===runToken) insertDiscard(c, below); res(); } });
+  }, i*STAG)));
+  await Promise.all(proms);
+}
+async function clientRevealToHand(seatVi, cardsPacked, color){   // Roulette : révélation face visible carte par carte
+  const cards=(cardsPacked||[]).map(unpackCard);
+  if(!cards.length){ Sound.special(); return; }
+  if(prefersReduced){ for(const c of cards){ if(seatVi===0) hands[0].push(c); else hands[seatVi].push({id:'op'+seatVi+'_'+(CARD_ID++)}); } return; }
+  const tok=runToken;
+  for(const c of cards){
+    const match=(effColor(c)===color), tgt=seatTarget(seatVi);
+    Sound[match?'special':'draw']();
+    await animate({ type:'card', faceDown:false, key:spriteKey(c),
+      cx0:L.draw.x+L.draw.w/2, cy0:L.draw.y+L.draw.h/2, cx1:tgt.cx, cy1:tgt.cy,
+      w0:L.cw, w1:tgt.w, r0:0, r1:tgt.rot, dur:match?300:200,
+      onEnd:()=>{ if(state&&tok===runToken){ if(seatVi===0){ hands[0].push(c); cardPos[c.id]={x:tgt.cx,y:tgt.cy,w:tgt.w,rot:tgt.rot}; } else hands[seatVi].push({id:'op'+seatVi+'_'+(CARD_ID++)}); } } });
+    if(!state) return;
+  }
+}
+async function clientPassHands(dir, myNewHandPacked, counts){    // Carte 0 : toutes les mains en jeu tournent (sens du jeu)
+  const myNew=(myNewHandPacked||[]).map(unpackCard);
+  counts=counts||[myNew.length,0,0,0];
+  const alive=[0,1,2,3].filter(k=>!state.eliminated || !state.eliminated[k]);
+  if(prefersReduced || alive.length<2){ hands[0]=myNew; for(let s=1;s<4;s++) fillPlaceholders(s, counts[s]||0); return; }
+  const nextAlive=s=>{ let j=(s+dir+4)%4,g=0; while(alive.indexOf(j)<0 && g++<8) j=(j+dir+4)%4; return j; };
+  const prevOf={}; for(const s of alive) prevOf[nextAlive(s)]=s;   // le siège d reçoit la main de prevOf[d]
+  const oldSlots={}; for(const s of alive) oldSlots[s]=layoutHand(s, hands[s].length);
+  const newSlots={}; for(const d of alive) newSlots[d]=layoutHand(d, counts[d]||0);
+  const flights=[];
+  for(const d of alive){
+    const src=prevOf[d], n=counts[d]||0;
+    for(let i=0;i<n;i++){
+      const from=(oldSlots[src]&&oldSlots[src][i])||seatTarget(src);
+      const to=(newSlots[d]&&newSlots[d][i])||seatTarget(d);
+      const faceUp=(d===0);
+      flights.push({from,to,faceUp,key:faceUp?spriteKey(myNew[i]):'back',
+        w0:from.w||(src===0?L.cw:L.ocw), w1:to.w||(d===0?L.cw:L.ocw)});
+    }
+  }
+  hands[0]=[]; for(let s=1;s<4;s++) hands[s]=[];               // mains vides pendant les vols (comme animateDealInto)
+  Sound.special();
+  const tok=runToken, STAG=clamp(300/Math.max(1,flights.length),8,32), DUR=260;
+  const proms=flights.map((f,i)=>new Promise(res=>setTimeout(()=>{
+    if(!state||tok!==runToken){ res(); return; }
+    animate({ type:'card', faceDown:!f.faceUp, key:f.key, cx0:f.from.cx, cy0:f.from.cy, cx1:f.to.cx, cy1:f.to.cy,
+      w0:f.w0, w1:f.w1, r0:f.from.rot||0, r1:f.to.rot||0, dur:DUR, onEnd:res });
+  }, i*STAG)));
+  await Promise.all(proms);
+  if(!state||tok!==runToken) return;
+  hands[0]=myNew; for(const d of alive){ if(d!==0) fillPlaceholders(d, counts[d]||0); }
+}
+async function clientSwap(aVi, bVi, myNewHandPacked, counts){    // Carte 7 : échange de deux mains
+  if((aVi===0 || bVi===0) && myNewHandPacked){                  // je suis concerné → vol riche des deux mains
+    const otherVi=(aVi===0)?bVi:aVi;
+    const myNew=(myNewHandPacked||[]).map(unpackCard);
+    const otherNew=(counts?counts[otherVi]:hands[otherVi].length);   // = mon ancien nombre de cartes
+    if(prefersReduced){ hands[0]=myNew; fillPlaceholders(otherVi, otherNew); return; }
+    const myOld=hands[0].slice();
+    const myOldSlots=layoutHand(0, myOld.length), otherOldSlots=layoutHand(otherVi, hands[otherVi].length);
+    const myNewSlots=layoutHand(0, myNew.length), otherNewSlots=layoutHand(otherVi, myOld.length);
+    hands[0]=[]; hands[otherVi]=[];
+    Sound.special();
+    const tok=runToken, proms=[];
+    myOld.forEach((c,i)=>{ const from=myOldSlots[i]||seatTarget(0), to=otherNewSlots[i]||seatTarget(otherVi);   // mes cartes → l'autre (dos)
+      proms.push(new Promise(res=>setTimeout(()=>{ if(!state||tok!==runToken){res();return;}
+        animate({type:'card',faceDown:true,key:'back',cx0:from.cx,cy0:from.cy,cx1:to.cx,cy1:to.cy,w0:from.w||L.cw,w1:to.w||L.ocw,r0:from.rot||0,r1:to.rot||0,dur:300,onEnd:res}); }, i*18))); });
+    myNew.forEach((c,i)=>{ const from=otherOldSlots[i]||seatTarget(otherVi), to=myNewSlots[i]||seatTarget(0);   // ses cartes → moi (face visible)
+      proms.push(new Promise(res=>setTimeout(()=>{ if(!state||tok!==runToken){res();return;}
+        animate({type:'card',faceDown:false,key:spriteKey(c),cx0:from.cx,cy0:from.cy,cx1:to.cx,cy1:to.cy,w0:from.w||L.ocw,w1:to.w||L.cw,r0:from.rot||0,r1:to.rot||0,dur:300,onEnd:res}); }, i*18))); });
+    await Promise.all(proms);
+    if(!state||tok!==runToken) return;
+    hands[0]=myNew; fillPlaceholders(otherVi, otherNew);
+  } else {
+    await clientSwapFlourish(aVi, bVi);                         // deux adversaires : flourish de dos croisés
+  }
 }
 async function clientDrawAnim(seatVi, n, cards){
   if(seatVi===0 && cards && NET.pred.draw>0){
