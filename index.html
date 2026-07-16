@@ -1069,7 +1069,7 @@ function draw(){
   drawCenterMsg();
   if(state.phase==='chooseColor' || state.phase==='rouletteColor') drawColorPicker();
   if(state.phase==='chooseSwap') drawSwapPrompt();
-  if(state.chal) drawChallenge();
+  if(state.chal && state.phase==='challengePrompt') drawChallenge();
   if(state.over) drawGameOver();
   if(rulesOverlay) drawRules();
 }
@@ -1717,30 +1717,40 @@ async function resolveWild4(pi, colorBefore){
   const victim=nextIdx(pi);
   const hadColor = hands[pi].some(c=>c.color===colorBefore);   // aurait pu suivre ? (bluff si vrai)
   toast('Couleur : '+COLOR_FR[state.currentColor]);
+  const bpart = (NAMES[pi]==='Vous') ? 'votre +4' : ('le +4 de '+NAMES[pi]);
+  const askMsg = NAMES[victim]+' choisit de contester '+bpart+' ou non…';   // message pour les autres joueurs pendant la décision
   let challenge=false;
   const vctl=seatCtl[victim].kind;
   if(vctl==='local'){
+    broadcastCenter(null, THEME.gold, 20000, true, askMsg);   // les autres voient le message ; moi : le panneau de contestation
     state.chal={by:pi}; state.phase='challengePrompt'; netFlush();
     challenge = await waitInput('challenge');
     state.chal=null;
   } else if(vctl==='remote'){
+    broadcastCenter(askMsg, THEME.gold, 20000);               // hôte + spectateurs voient le message ; la victime voit le panneau
     state.chal={by:pi}; state.phase='remoteChallenge';
     challenge = await waitRemote(victim,'challenge', v=>typeof v==='boolean', false);
     state.chal=null;
-  } else {
+  } else {                                                    // IA : suspense « réflexion »
+    broadcastCenter(askMsg, THEME.gold, 20000);
+    await sleep(prefersReduced?0:1200);
+    if(!state) return;
     let p=0.16; if(hands[pi].length<=2) p+=0.16;
     challenge = Math.random()<p;
   }
   if(!state) return;
   if(challenge){
-    if(hadColor){
+    if(hadColor){                                             // le +4 était un bluff : contestation réussie
+      broadcastCenter('Contestation réussie !', THEME.gold, 2400);
       toast(NAMES[victim]+' conteste et gagne : '+NAMES[pi]+' pioche 4');
       await drawToHand(pi,4,'effect'); if(!state) return; state.current=victim;   // la victime joue normalement
-    } else {
+    } else {                                                  // contestation injustifiée
+      broadcastCenter('Contestation ratée — +6', THEME.bad, 2400);
       toast(NAMES[victim]+' conteste à tort : pioche 6'); Sound.error();
       await drawToHand(victim,6,'effect'); if(!state) return; state.current=nextIdx(victim);
     }
   } else {
+    broadcastCenter('Pas de contestation', THEME.gold, 1600);
     toast(NAMES[victim]+' pioche 4 et passe');
     await drawToHand(victim,4,'effect'); if(!state) return; state.current=nextIdx(victim);
   }
@@ -2576,6 +2586,7 @@ function netPredict(kind, val){
       else if(val && val.type==='draw'){ if(state.pendingDraw>0) predictDrawPile(state.pendingDraw); else predictDraw(); }
     } else if(kind==='drewPlayable' && val && val.type==='play') predictPlay(val.idx);
     else if(kind==='color'){ predictRecolor(val); if(state) state.phase='resolving'; }   // referme le sélecteur de couleur tout de suite
+    else if(kind==='challenge'){ if(state){ state.chal=null; state.phase='resolving'; } }   // referme le panneau de contestation tout de suite
   }catch(e){}
 }
 
