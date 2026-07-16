@@ -1089,7 +1089,7 @@ function drawSwapFx(){
 }
 function drawCenterMsg(){
   const m=state.centerMsg; if(!m) return;
-  const age=performance.now()-(m.until-2800); const left=m.until-performance.now();
+  const age=performance.now()-(m.t0||(m.until-2800)); const left=m.until-performance.now();
   if(left<=0){ state.centerMsg=null; return; }
   const alpha = left<400 ? left/400 : (age<200?age/200:1);
   const lines=m.text.split('\n');
@@ -1360,8 +1360,10 @@ async function playCardBy(pi, idx){
                    : (layoutHand(pi, hand.length)[idx] || seatTarget(pi));
   hand.splice(idx,1);
   netEmit({ev:'play', seat:pi, card:packCard(card)});
+  netFlushEventsOnly();                                     // les clients animent le jeu EN MÊME TEMPS que l'hôte
   await animatePlay(pi, card, src);
   if(!state) return;
+  discard.push(card);                                      // la carte est SUR la pile dès qu'elle atterrit (avant tout choix de couleur)
 
   // choix couleur si Joker
   // No Mercy : les jokers Draw (+4 inversion, +6, +10) → le JOUEUR choisit la couleur maintenant.
@@ -1370,16 +1372,19 @@ async function playCardBy(pi, idx){
     ? (card.type==='wildrev4' || card.type==='wild6' || card.type==='wild10')
     : (card.type==='wild' || card.type==='wild4');
   if(needsColorPick){
+    const pk=NAMES[pi], ctl=seatCtl[pi].kind;
+    const askMsg = (card.type!=='wild')                    // wild4/wild6/wild10/wildrev4 → effet ; wild classique = couleur seule
+      ? pk+' doit choisir une couleur\npour appliquer l\'effet de cette carte…'
+      : pk+' doit choisir une couleur…';
     let color;
-    const ctl=seatCtl[pi].kind;
-    if(ctl==='local'){ state.phase='chooseColor'; netFlush(); color = await waitInput('color'); }
-    else if(ctl==='remote'){ state.phase='remoteColor'; color = await waitRemote(pi,'color', c=>COLORS.includes(c), aiChooseColor(hands[pi])); }
-    else color = aiChooseColor(hands[pi]);
+    if(ctl==='local'){ broadcastCenter(askMsg, THEME.gold, 20000, true); state.phase='chooseColor'; netFlush(); color = await waitInput('color'); }   // le picker recouvre le message chez l'hôte
+    else if(ctl==='remote'){ broadcastCenter(askMsg, THEME.gold, 20000); state.phase='remoteColor'; color = await waitRemote(pi,'color', c=>COLORS.includes(c), aiChooseColor(hands[pi])); }
+    else { broadcastCenter(askMsg, THEME.gold, 20000); await sleep(1000); color = aiChooseColor(hands[pi]); }   // l'IA « réfléchit » pour que les autres voient le message
     if(!state) return;
     card.chosenColor=color;
     netEmit({ev:'recolor', rot:card._rot, card:packCard(card)});   // met à jour la carte posée (variante colorée)
+    broadcastCenter(pk+' a choisi '+COLOR_FR[color]+' !', COLOR_HEX[color], 2400);
   }
-  discard.push(card);
   // couleur à suivre : fixée maintenant sauf pour le Joker Roulette (le suivant la choisira)
   if(!(state.nomercy && card.type==='wild')) state.currentColor=effColor(card);
   state.phase='resolving';
@@ -1799,7 +1804,12 @@ function resolveVuln(penalize, protester){
     netFlush();
   }
 }
-function centerMessage(text,color){ state.centerMsg={ text, color:color||THEME.bad, until:performance.now()+2800 }; }
+function centerMessage(text,color,ms){ ms=ms||2800; state.centerMsg={ text, color:color||THEME.bad, t0:performance.now(), until:performance.now()+ms }; }
+function broadcastCenter(text,color,ms,skipLocal){        // message central + diffusion immédiate aux clients (le sélecteur le recouvre chez celui qui choisit)
+  if(!skipLocal) centerMessage(text,color,ms);
+  netEmit({ev:'cmsg', text, color:color||THEME.bad, ms:ms||2800});
+  netFlushEventsOnly();
+}
 
 /* ============================================================
    IA
@@ -2602,6 +2612,7 @@ async function handleNetEv(ev){
     case 'roundStart': await clientRoundStart(ev); break;
     case 'toast': toastState={msg:ev.msg, t:performance.now()}; live.textContent=ev.msg; break;
     case 'uno': Sound.uno(); break;
+    case 'cmsg': if(state){ state.centerMsg={ text:ev.text, color:ev.color, t0:performance.now(), until:performance.now()+(ev.ms||2800) }; } break;
     case 'play': if(state) await clientPlay(ev.seat, unpackCard(ev.card)); break;
     case 'recolor': { const c=discard.find(d=>d.id===ev.card.id); if(c){ const u=unpackCard(ev.card); Object.assign(c,u); } break; }
     case 'draw': if(state) await clientDrawAnim(ev.seat, ev.n, ev.cards); break;
