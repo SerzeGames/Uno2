@@ -1094,15 +1094,21 @@ function drawCenterMsg(){
   if(left<=0){ state.centerMsg=null; return; }
   const alpha = left<400 ? left/400 : (age<200?age/200:1);
   const lines=m.text.split('\n');
+  const fs = clamp(Math.round(Math.min(L.W,L.H)*0.042), 13, 19);   // taille adaptée à l'écran (plus petit sur mobile)
+  const lh = Math.round(fs*1.4);
   ctx.save(); ctx.globalAlpha=Math.max(0,Math.min(1,alpha));
-  ctx.font="700 20px 'Fredoka',sans-serif"; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.font="700 "+fs+"px 'Fredoka',sans-serif"; ctx.textAlign='center'; ctx.textBaseline='middle';
   let maxW=0; for(const ln of lines) maxW=Math.max(maxW, ctx.measureText(ln).width);
-  const pw=Math.min(L.W-40, maxW+52), ph=28*lines.length+34, x=L.W/2-pw/2, y=L.H/2-ph/2;
-  ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=26; roundRect(x,y,pw,ph,16); ctx.fillStyle='rgba(20,10,14,0.96)'; ctx.fill(); ctx.shadowBlur=0;
-  roundRect(x,y,pw,ph,16); ctx.strokeStyle=m.color; ctx.lineWidth=2; ctx.stroke();
+  const pw=Math.min(L.W-24, maxW+Math.round(fs*2.4)), ph=lh*lines.length+Math.round(fs*1.1);
+  const topY=(L.seat&&L.seat[2])?L.seat[2].cy:Math.round(L.H*0.1);   // placé dans la bande AU-DESSUS des piles → l'action centrale reste visible
+  const bandTop=topY+L.och*0.5+10, bandBot=L.discard.y-10;
+  const x=Math.round(L.W/2-pw/2);
+  const y=clamp(Math.round((bandTop+bandBot)/2-ph/2), 8, Math.max(8, Math.round(bandBot-ph)));   // priorité : ne jamais déborder sur les piles
+  ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=20; roundRect(x,y,pw,ph,13); ctx.fillStyle='rgba(20,10,14,0.94)'; ctx.fill(); ctx.shadowBlur=0;
+  roundRect(x,y,pw,ph,13); ctx.strokeStyle=m.color; ctx.lineWidth=1.5; ctx.stroke();
   ctx.fillStyle=m.color;
-  let ty=y+ph/2-((lines.length-1)*14);
-  for(const ln of lines){ ctx.fillText(ln, L.W/2, ty); ty+=28; }
+  let ty=y+Math.round(ph/2-((lines.length-1)*lh/2));
+  for(const ln of lines){ ctx.fillText(ln, L.W/2, ty); ty+=lh; }
   ctx.restore();
 }
 
