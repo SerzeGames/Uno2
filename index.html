@@ -42,9 +42,14 @@
    ============================================================ */
 const SHEET_SRC = "images/spritesheetunoclassique.png";   // planche classique (chargée localement)
 const SHEET_SRC_NM = "images/spritesheetnomercy.png";     // planche UNO No Mercy
+const SHEET_SRC_NM_EXP = "images/spritesheetnomercyexpansion.png";   // planche extension Show 'Em No Mercy (24 cartes)
+const SHEET_SRC_TOKEN = "images/tokensnomercy.png";   // jetons (2 faces)
 const SPRITE = {"back":[0,0,88,136],"blue_0":[982,412,89,138],"blue_1":[177,412,89,138],"blue_2":[266,412,90,138],"blue_3":[356,412,89,138],"blue_4":[445,412,89,138],"blue_5":[534,412,90,138],"blue_6":[625,412,89,138],"blue_7":[714,412,90,138],"blue_8":[804,412,89,138],"blue_9":[893,412,89,138],"blue_draw2":[0,551,88,137],"blue_reverse":[177,550,89,138],"blue_skip":[88,550,89,138],"green_0":[0,689,88,137],"green_1":[266,550,90,138],"green_2":[356,551,89,137],"green_3":[445,550,89,138],"green_4":[534,551,90,137],"green_5":[625,551,89,137],"green_6":[714,550,90,138],"green_7":[804,550,89,138],"green_8":[893,550,89,138],"green_9":[982,551,89,137],"green_draw2":[88,688,89,138],"green_reverse":[266,688,90,138],"green_skip":[177,688,89,138],"red_0":[893,274,89,138],"red_1":[89,274,88,138],"red_2":[177,274,89,138],"red_3":[266,274,90,138],"red_4":[356,274,89,138],"red_5":[445,274,89,138],"red_6":[534,274,90,138],"red_7":[626,274,88,138],"red_8":[714,274,90,138],"red_9":[805,274,88,138],"red_draw2":[982,274,89,138],"red_reverse":[88,412,89,138],"red_skip":[0,412,88,138],"wild":[89,0,88,136],"wild4":[534,0,90,136],"wild4_blue":[804,0,89,136],"wild4_green":[893,0,89,136],"wild4_red":[714,0,90,136],"wild4_yellow":[626,0,88,136],"wild_blue":[357,0,88,136],"wild_green":[445,0,89,136],"wild_red":[266,0,90,136],"wild_yellow":[177,0,89,136],"yellow_0":[804,136,89,138],"yellow_1":[0,136,88,138],"yellow_2":[88,136,89,138],"yellow_3":[177,136,89,138],"yellow_4":[266,136,90,138],"yellow_5":[356,136,89,138],"yellow_6":[445,136,89,138],"yellow_7":[534,136,90,138],"yellow_8":[624,136,90,138],"yellow_9":[714,136,90,138],"yellow_draw2":[893,136,89,138],"yellow_reverse":[0,274,88,138],"yellow_skip":[982,136,89,138]};            // { key:[x,y,w,h], ... } classique
 const SPRITE_NM = {"back":[1,1,126,198],"blue_0":[129,1,126,198],"blue_1":[257,1,126,198],"blue_2":[385,1,126,198],"blue_3":[513,1,126,198],"blue_4":[641,1,126,198],"blue_5":[769,1,126,198],"blue_6":[897,1,126,198],"blue_7":[1025,1,126,198],"blue_8":[1153,1,126,198],"blue_9":[1281,1,126,198],"blue_draw2":[1409,1,126,198],"blue_draw4":[1,201,126,198],"blue_drawall":[129,201,126,198],"blue_reverse":[257,201,126,198],"blue_skip":[385,201,126,198],"blue_skipall":[513,201,126,198],"green_0":[641,201,126,198],"green_1":[769,201,126,198],"green_2":[897,201,126,198],"green_3":[1025,201,126,198],"green_4":[1153,201,126,198],"green_5":[1281,201,126,198],"green_6":[1409,201,126,198],"green_7":[1,401,126,198],"green_8":[129,401,126,198],"green_9":[257,401,126,198],"green_draw2":[385,401,126,198],"green_draw4":[513,401,126,198],"green_drawall":[641,401,126,198],"green_reverse":[769,401,126,198],"green_skip":[897,401,126,198],"green_skipall":[1025,401,126,198],"red_0":[1153,401,126,198],"red_1":[1281,401,126,198],"red_2":[1409,401,126,198],"red_3":[1,601,126,198],"red_4":[129,601,126,198],"red_5":[257,601,126,198],"red_6":[385,601,126,198],"red_7":[513,601,126,198],"red_8":[641,601,126,198],"red_9":[769,601,126,198],"red_draw2":[897,601,126,198],"red_draw4":[1025,601,126,198],"red_drawall":[1153,601,126,198],"red_reverse":[1281,601,126,198],"red_skip":[1409,601,126,198],"red_skipall":[1,801,126,198],"wild":[129,801,126,198],"wild10":[257,801,126,198],"wild6":[385,801,126,198],"wildrev4":[513,801,126,198],"yellow_0":[641,801,126,198],"yellow_1":[769,801,126,198],"yellow_2":[897,801,126,198],"yellow_3":[1025,801,126,198],"yellow_4":[1153,801,126,198],"yellow_5":[1281,801,126,198],"yellow_6":[1409,801,126,198],"yellow_7":[1,1001,126,198],"yellow_8":[129,1001,126,198],"yellow_9":[257,1001,126,198],"yellow_draw2":[385,1001,126,198],"yellow_draw4":[513,1001,126,198],"yellow_drawall":[641,1001,126,198],"yellow_reverse":[769,1001,126,198],"yellow_skip":[897,1001,126,198],"yellow_skipall":[1025,1001,126,198]};      // { key:[x,y,w,h], ... } No Mercy
 let SHEET_NM = null;                                       // image No Mercy (chargée à la volée)
+const SPRITE_NM_EXP = {"wilddiscardall":[2,2,126,198],"red_10":[130,2,126,198],"blue_10":[258,2,126,198],"yellow_10":[386,2,126,198],"green_10":[2,202,126,198],"wildrev8":[130,202,126,198],"wildsudden":[258,202,126,198],"wildfinal":[386,202,126,198]};   // extension No Mercy
+let SHEET_NM_EXP = null;                                    // image extension (chargée à la volée)
+let SHEET_TOKEN = null; const TOKEN_SPRITE={mercy:[0,0,200,200], nomercy:[200,0,200,200]};   // jetons
 const CARD_AR_CLASSIC = 165/256;
 const CARD_AR_NM = 128/200;                               // ratio des cartes No Mercy (portrait, planche assemblée)
 function curSheet(){ return (state && state.nomercy) ? SHEET_NM : SHEET; }
@@ -176,9 +181,16 @@ function buildDeckNM(){
   for(let i=0;i<4;i++){ d.push(mk('wild','wildrev4',null)); }                          // Joker Inversion +4
   for(let i=0;i<4;i++){ d.push(mk('wild','wild6',null)); }                             // Joker +6
   for(let i=0;i<4;i++){ d.push(mk('wild','wild10',null)); }                            // Joker +10
+  if(settings.expansion){                                                              // extension Show 'Em No Mercy (24 cartes)
+    for(const c of COLORS){ d.push(mk(c,'number',10)); d.push(mk(c,'number',10)); }     // 8× carte 10 (rejouer)
+    for(let i=0;i<8;i++) d.push(mk('wild','wilddiscardall',null));                      // 8× Joker Défausse Tout
+    for(let i=0;i<4;i++) d.push(mk('wild','wildrev8',null));                            // 4× Joker Inversion +8
+    for(let i=0;i<2;i++) d.push(mk('wild','wildsudden',null));                          // 2× Joker Mort Subite
+    for(let i=0;i<2;i++) d.push(mk('wild','wildfinal',null));                           // 2× Joker Attaque Finale
+  }
   return shuffle(d);
 }
-const DRAW_VALUE = { draw2:2, draw4:4, wildrev4:4, wild6:6, wild10:10 };               // valeur d'empilement des cartes "+X"
+const DRAW_VALUE = { draw2:2, draw4:4, wildrev4:4, wildrev8:8, wild6:6, wild10:10 };               // valeur d'empilement des cartes "+X"
 function drawValue(card){ return DRAW_VALUE[card.type] || 0; }
 function spriteKey(card){
   if(card.__key) return card.__key;                 // carte reconstruite côté client (multijoueur)
@@ -186,6 +198,10 @@ function spriteKey(card){
     if(card.type==='wildrev4') return 'wildrev4';
     if(card.type==='wild6') return 'wild6';
     if(card.type==='wild10') return 'wild10';
+    if(card.type==='wilddiscardall') return 'wilddiscardall';   // extension
+    if(card.type==='wildrev8') return 'wildrev8';
+    if(card.type==='wildsudden') return 'wildsudden';
+    if(card.type==='wildfinal') return 'wildfinal';
     const base = card.type==='wild4' ? 'wild4' : 'wild';
     if(card.chosenColor){ const k=base+'_'+card.chosenColor; if(curMap()[k]) return k; }   // variante colorée seulement si la planche en a une (absente en No Mercy → reste 'wild')
     return base;
@@ -211,7 +227,7 @@ let hands=[[],[],[],[]];
 let drawPile=[], discard=[];
 const scores=[0,0,0,0];
 let state = null;
-let settings = { stacking:false, mix:false, target:500, targetSet:false };   // objectif de points ('round'|200|500|1000) ; targetSet=false → défaut selon le mode (classique 500, No Mercy 1000)
+let settings = { stacking:false, mix:false, target:500, targetSet:false, expansion:false };   // expansion = extension No Mercy (optionnelle)
 let inMenu = false;                              // true = écran de création de partie
 let rulesOverlay = false;                        // overlay règles (menu ou en jeu)
 let runToken = 0;                                // invalide les boucles de jeu obsolètes
@@ -234,6 +250,13 @@ function isLegalPlay(card){
 }
 // Le siège a-t-il un coup possible (jouer/empiler) ? sinon il devra piocher automatiquement
 function seatHasMove(pi){ return state.pendingDraw>0 ? hands[pi].some(c=>canStack(c)) : hands[pi].some(c=>isPlayable(c, top())); }
+function canReachUno(){                                       // vrai si jouer maintenant amène à 1 carte (avant-dernière carte jouable)
+  if(!state || state.over || state.current!==0) return false;
+  if(hands[0].length!==2) return false;
+  if(state.phase==='drewPlayable') return !!(state.drewCard && isPlayable(state.drewCard, top()));
+  if(state.phase==='human') return seatHasMove(0);
+  return false;
+}
 function nextIdx(i){
   let j=(i + state.dir + 4) % 4;
   if(state.nomercy){ let guard=0; while(state.eliminated && state.eliminated[j] && guard++<4){ j=(j + state.dir + 4) % 4; } }
@@ -312,7 +335,7 @@ function computeLayout(){
     { x:W-16-chW, y:sideAvatarY, w:chW, h:chH, align:'left' }                 // droite
   ];
   // repères pour les boutons du joueur (empilés et centrés au-dessus de l'avatar "Vous")
-  L.me = { unoY: meAvatarY - 52, keepY: meAvatarY - 52 - 40 };
+  L.me = { unoY: meAvatarY - 52, highY: meAvatarY - 52 - 50, keepY: meAvatarY - 52 };
 
   // Anneau de sens : aussi grand que possible en dégageant bien les piles,
   // tout en restant sous l'éventail du haut et au-dessus du bouton UNO
@@ -352,6 +375,18 @@ function buildCardCache(){
     c.save(); rr(c,x,y,w,h,r); c.clip();
     const b=MAP[key]; c.drawImage(SH, b[0],b[1],b[2],b[3], x,y,w,h); c.restore();
     cardCache[key]=cnv;
+  }
+  if(state && state.nomercy && SHEET_NM_EXP){                // cartes de l'extension (planche séparée)
+    for(const key in SPRITE_NM_EXP){
+      const cnv=document.createElement('canvas'); cnv.width=devW; cnv.height=devH;
+      const c=cnv.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0);
+      const x=cachePad, y=cachePad, w=cacheCoreW, h=cacheCoreH, r=w*0.085;
+      c.save(); c.shadowColor='rgba(0,0,0,0.5)'; c.shadowBlur=w*0.14; c.shadowOffsetY=h*0.05;
+      c.fillStyle='#000'; rr(c,x,y,w,h,r); c.fill(); c.restore();
+      c.save(); rr(c,x,y,w,h,r); c.clip();
+      const b=SPRITE_NM_EXP[key]; c.drawImage(SHEET_NM_EXP, b[0],b[1],b[2],b[3], x,y,w,h); c.restore();
+      cardCache[key]=cnv;
+    }
   }
 }
 function drawCard(key,x,y,w,h,rot,opt){
@@ -719,12 +754,19 @@ function drawActionButtons(){
       L.buttons['drawpile']={x:d.x-6,y:d.y-6,w:d.w+12,h:d.h+12};
     }
   }
-  // Bouton UNO : actif à chaque tour du joueur, centré au-dessus de la main
-  if(!state.over && state.current===0 && (state.phase==='human'||state.phase==='drewPlayable')){
+  // Bouton « Dire UNO » : seulement quand jouer maintenant amène à 1 carte (avant-dernière carte jouable)
+  if(canReachUno() && (state.phase==='human'||state.phase==='drewPlayable')){
     const armed=state.saidUno[0];
-    const bw=132, bh=44, x=Math.round(L.W/2-bw/2), y=L.me.unoY;
-    if(armed) button('unoBtn', x,y,bw,bh, 'UNO ✓', {fill:THEME.gold, color:'#2a1e00', glow:THEME.gold, pulse:true, round:12, font:"700 20px 'Fredoka',sans-serif"});
-    else       button('unoBtn', x,y,bw,bh, 'UNO', {fill:'rgba(28,20,38,0.9)', color:THEME.gold, stroke:THEME.gold, lw:2, round:12, font:"700 20px 'Fredoka',sans-serif"});
+    const bw=154, bh=44, x=Math.round(L.W/2-bw/2), y=L.me.highY;
+    if(armed) button('unoBtn', x,y,bw,bh, '« UNO » ✓', {fill:THEME.gold, color:'#2a1e00', glow:THEME.gold, pulse:true, round:12, font:"700 18px 'Fredoka',sans-serif"});
+    else       button('unoBtn', x,y,bw,bh, 'Dire « UNO » !', {fill:'rgba(28,20,38,0.92)', color:THEME.gold, stroke:THEME.gold, lw:2, round:12, font:"700 17px 'Fredoka',sans-serif"});
+  }
+  // Bouton « Utiliser votre Jeton » : à chaque tour tant que non utilisé (agrandi + en surbrillance)
+  if(!state.over && state.current===0 && state.phase==='human' && state.tokens && state.tokens[0] && state.tokens[0].face && !state.tokens[0].used){
+    const tk=state.tokens[0], isNo=(tk.face==='nomercy');
+    const bw=228, bh=52, x=Math.round(L.W/2-bw/2), y=L.me.unoY-2;
+    if(tk.armed) button('tokenBtn', x,y,bw,bh, 'Jeton armé ✓', {fill:THEME.bad, color:'#fff', glow:THEME.bad, pulse:true, round:14, font:"700 18px 'Fredoka',sans-serif"});
+    else          button('tokenBtn', x,y,bw,bh, 'Utiliser votre Jeton', {fill:(isNo?'rgba(228,50,43,0.30)':'rgba(245,197,24,0.28)'), color:(isNo?'#ffb4ac':'#ffe08a'), stroke:(isNo?THEME.red:THEME.gold), lw:2.5, glow:(isNo?THEME.red:THEME.gold), pulse:true, round:14, font:"700 18px 'Fredoka',sans-serif"});
   }
   // après pioche : jouer la carte piochée ou la garder — centré au-dessus du bouton UNO
   if(!state.over && state.phase==='drewPlayable'){
@@ -824,45 +866,83 @@ function drawChallenge(){
   button('chal_yes', p.x+20, y, bw, bh, 'Contester', {fill:THEME.bad, color:'#fff', glow:THEME.bad, round:12, font:"700 16px 'Fredoka',sans-serif"});
   button('chal_no', p.x+40+bw, y, bw, bh, 'Piocher 4', {stroke:'rgba(255,255,255,0.25)', round:12, font:"700 16px 'Fredoka',sans-serif"});
 }
+let rulesScroll=0, rulesScrollMax=0, rulesDrag=null;
+function rulesRect(){ const w=Math.min(600,L.W-24), h=Math.min(640,L.H-24); return {x:Math.round(L.W/2-w/2), y:Math.round(L.H/2-h/2), w, h}; }
+const RULES_CONTENT = [
+  ['h','But du jeu'],
+  ['p','Débarrassez-vous de toutes vos cartes avant les autres. La 1re personne à vider sa main remporte la manche. On enchaîne les manches jusqu\u2019à l\u2019objectif de points ; le 1er à l\u2019atteindre gagne la partie.'],
+  ['h','À votre tour'],
+  ['p','Posez une carte de même COULEUR, même CHIFFRE ou même SYMBOLE que la carte du dessus de la défausse. Un Joker se pose sur n\u2019importe quelle carte.'],
+  ['p','Si vous ne pouvez pas (ou ne voulez pas) jouer, piochez une carte : vous pouvez la poser aussitôt si elle est jouable, sinon vous la gardez et passez.'],
+  ['h','Cartes d\u2019action classiques'],
+  ['b','Inverse — change le sens du jeu. À 2 joueurs, elle agit comme un « Passe ».'],
+  ['b','Passe — le joueur suivant saute son tour.'],
+  ['b','+2 — le suivant pioche 2 cartes et passe son tour.'],
+  ['b','Joker — vous choisissez la nouvelle couleur.'],
+  ['b','Joker +4 — couleur au choix ; le suivant pioche 4 et passe. À ne jouer que si vous n\u2019avez pas la couleur en cours : le suivant peut vous contester.'],
+  ['h','Contestation du Joker +4'],
+  ['p','Quand un +4 est posé, le joueur visé peut contester (soupçon de bluff). S\u2019il a raison (vous pouviez suivre la couleur) : c\u2019est VOUS qui piochez 4, et il joue normalement. S\u2019il a tort : il pioche 6. Sans contestation : il pioche 4 et passe. (Désactivée en mode Cumul.)'],
+  ['h','Dire « UNO »'],
+  ['p','Juste avant de poser votre AVANT-DERNIÈRE carte (il vous en restera une), annoncez « UNO » avec le bouton qui apparaît à ce moment précis.'],
+  ['p','Si vous oubliez, un adversaire peut vous dénoncer avant de jouer son tour → vous piochez 2 cartes. Pour dénoncer une IA, touchez « N\u2019a pas dit UNO ! » au-dessus d\u2019elle à temps.'],
+  ['h','Score & fin de partie'],
+  ['p','Le gagnant d\u2019une manche marque la valeur des cartes restées dans les mains adverses : chiffres = leur valeur ; cartes d\u2019action colorées = 20 ; Jokers = 50.'],
+  ['p','Objectif réglable au menu (Classique : 500 pts · No Mercy : 1000 pts, ou 1 seule manche). Le 1er à l\u2019objectif remporte la partie.'],
+  ['h','Mode Cumul (+ empilables)'],
+  ['p','Si activé : face à un +2 vous pouvez répondre par un autre +2 (la pénalité grimpe : +4, +6…). Idem +4 sur +4. Avec l\u2019option « mélange », +2 et +4 se combinent et les pénalités s\u2019additionnent.'],
+  ['p','Celui qui ne peut pas relancer encaisse toute la pile accumulée et passe son tour.'],
+  ['h','\u2620  MODE NO MERCY'],
+  ['p','Une version plus brutale : les cartes + sont toujours empilables, l\u2019élimination existe, et de nouvelles cartes apparaissent.'],
+  ['b','Règle « Mercy » — dès qu\u2019un joueur atteint 25 cartes ou plus, il est éliminé et sa main part à la défausse. On joue jusqu\u2019au dernier survivant. Chaque éliminé rapporte +250 pts au gagnant de la manche.'],
+  ['b','Empilement — on n\u2019empile qu\u2019une carte + de valeur égale ou supérieure (ex. un +10 sur un +6). Sinon on encaisse la pile.'],
+  ['b','Passe tout le monde — tous les autres joueurs sautent leur tour, et vous rejouez.'],
+  ['b','Défausse tout (colorée) — défaussez d\u2019un coup toutes les cartes de la couleur jouée.'],
+  ['b','Carte 0 — tous les joueurs passent leur main au voisin (dans le sens du jeu).'],
+  ['b','Carte 7 — échangez toute votre main avec un joueur de votre choix.'],
+  ['b','Joker Roulette — le joueur suivant choisit une couleur, puis pioche jusqu\u2019à en tirer une : toutes les cartes révélées rejoignent sa main.'],
+  ['b','Joker Inversion +4 — inverse le sens et lance une pile de +4 (empilable). À 2 joueurs, la pile vous revient.'],
+  ['b','Joker +6 / +10 — couleur au choix, et lance une pile de +6 / +10 (empilable).'],
+  ['h','\u2b50  EXTENSION « SHOW \u2019EM NO MERCY »'],
+  ['p','Optionnelle (à cocher au menu, en solo comme en multi). Ajoute 24 cartes et un jeton par joueur au mode No Mercy.'],
+  ['b','Carte 10 — se joue comme un chiffre, puis vous REJOUEZ immédiatement.'],
+  ['b','Joker Défausse Tout — choisissez une couleur, défaussez toutes vos cartes de cette couleur, puis choisissez la couleur de reprise.'],
+  ['b','Joker Inversion +8 — inverse le sens et lance une pile de +8 empilable (un +10 peut répondre). Vous choisissez la couleur. À 2 joueurs, la pile vous revient.'],
+  ['b','Joker Attaque Finale — révélez votre main : le joueur suivant passe et pioche 1 carte par carte Action/Joker qu\u2019il vous reste (les chiffres ne comptent pas). Si vous en révélez 7 ou plus, il pioche 25 et tous les autres piochent 5. Puis choisissez la couleur.'],
+  ['b','Joker Mort Subite — tout le monde (vous compris) pioche jusqu\u2019à avoir 24 cartes, puis vous choisissez la couleur. Avec la règle Mercy, chacun se retrouve à une carte de l\u2019élimination.'],
+  ['h','\ud83e\ude99  Les jetons (extension)'],
+  ['p','En début de CHAQUE manche, chacun choisit une face pour son jeton, chacun son tour. Il ne s\u2019utilise qu\u2019UNE seule fois par manche (bouton « Utiliser votre Jeton »).'],
+  ['b','Mercy Coin — défaussez toute votre main et repiochez 7 cartes neuves.'],
+  ['b','No Mercy Coin — armez-le, puis votre prochaine carte + voit sa pénalité DOUBLÉE (+10 → +20). En cas d\u2019empilement, seul votre apport double, pas toute la pile.'],
+  ['s','Bon jeu \u2014 et pas de pitié !']
+];
 function drawRules(){
-  dimScreen(0.72);
-  const w=Math.min(560,L.W-32), h=Math.min(560,L.H-40);
-  const x=L.W/2-w/2, y=L.H/2-h/2;
-  ctx.save(); ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=30;
-  roundRect(x,y,w,h,20); ctx.fillStyle=THEME.panel; ctx.fill(); ctx.restore();
+  dimScreen(0.74);
+  const R=rulesRect(), x=R.x, y=R.y, w=R.w, h=R.h;
+  ctx.save(); ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=30; roundRect(x,y,w,h,20); ctx.fillStyle=THEME.panel; ctx.fill(); ctx.restore();
   roundRect(x,y,w,h,20); ctx.strokeStyle=THEME.panelEdge; ctx.lineWidth=1.5; ctx.stroke();
   ctx.fillStyle=THEME.text; ctx.font="700 22px 'Fredoka',sans-serif"; ctx.textAlign='left'; ctx.textBaseline='top';
-  ctx.fillText('Règles du UNO', x+24, y+22);
-  button('rules_close', x+w-40, y+18, 26, 26, '✕', {stroke:'rgba(255,255,255,0.2)', font:"600 15px 'Space Grotesk'"});
-  const lines=[
-    ['h','But du jeu'],
-    ['p','Videz votre main avant les 3 IA. La 1re à ne plus avoir de carte remporte la manche.'],
-    ['h','Score'],
-    ['p','Le gagnant d\'une manche marque la valeur des cartes restantes des adversaires : chiffres 0–9 = leur valeur ; cartes action colorées (Passe, Inverse, +2, +4, Défausse tout, Passe tout le monde) = 20 ; Jokers (Roulette, Inversion +4, +6, +10, et +4 classique) = 50.'],
-    ['p','On enchaîne les manches jusqu\'à l\'objectif de points (classique 500, No Mercy 1000 — réglable au menu). Le 1er à l\'atteindre remporte la partie.'],
-    ['p','No Mercy — Mercy Rule : chaque joueur éliminé (25 cartes ou plus) rapporte en plus 250 pts au gagnant de la manche ; les cartes de l\'éliminé ne comptent pas.'],
-    ['h','À votre tour'],
-    ['p','Jouez une carte de même couleur, même chiffre ou même symbole que la défausse.'],
-    ['p','Un Joker se joue à tout moment. Sinon, piochez : la carte peut être posée si elle est jouable.'],
-    ['h','Cartes spéciales'],
-    ['p','Inverse : change le sens du jeu.'],
-    ['p','Passe : le joueur suivant saute son tour.'],
-    ['p','+2 : le suivant pioche 2 cartes et passe.'],
-    ['p','Joker : choisissez la nouvelle couleur.'],
-    ['p','Joker +4 : couleur au choix, le suivant pioche 4 et passe. Jouable seulement si vous n\'avez pas la couleur demandée — le suivant peut contester.'],
-    ['h','Variante : cartes + cumulables (Stacking)'],
-    ['p','Si activée : sur un +2 vous pouvez rejouer un +2 (la pénalité grimpe à +4, +6...). Idem +4 sur +4 (+8, +12...).'],
-    ['p','Sans mélange : +2 seulement sur +2, +4 seulement sur +4. Mélange total : +2 et +4 combinables, les pénalités s\'additionnent.'],
-    ['p','Celui qui ne peut pas relancer pioche toute la pile et passe son tour. (La contestation du +4 est désactivée en mode stacking.)'],
-    ['h','UNO !'],
-    ['p','Avant de jouer votre avant-dernière carte, annoncez « UNO » (le bouton UNO est actif à chaque tour).'],
-    ['p','Si vous oubliez, pas de pénalité immédiate : un autre joueur peut vous dénoncer avant de commencer son tour → vous piochez 2.'],
-    ['p','Pour dénoncer une IA qui a oublié, cliquez « N\'a pas dit UNO ! » au-dessus d\'elle avant que le joueur suivant ne joue. Trop tard = plus de sanction.']
-  ];
-  let cy=y+62; ctx.textAlign='left';
-  for(const [k,t] of lines){
-    if(k==='h'){ ctx.fillStyle=THEME.gold; ctx.font="700 15px 'Fredoka',sans-serif"; cy+=6; ctx.fillText(t, x+24, cy); cy+=22; }
-    else { ctx.fillStyle=THEME.sub; ctx.font="500 13px 'Space Grotesk',sans-serif"; cy=wrapText(t, x+24, cy, w-48, 18)+4; }
+  ctx.fillText('Règles du jeu', x+24, y+20);
+  button('rules_close', x+w-44, y+18, 28, 28, '✕', {stroke:'rgba(255,255,255,0.22)', font:"600 15px 'Space Grotesk',sans-serif"});
+  const top=y+58, bot=y+h-12, areaH=bot-top, padX=24, cw=w-48-12;
+  ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x+18, top-3); ctx.lineTo(x+w-18, top-3); ctx.stroke();
+  ctx.save(); roundRect(x+8, top, w-16, areaH, 8); ctx.clip();
+  const startY=top - rulesScroll + 6; let cy=startY; ctx.textAlign='left'; ctx.textBaseline='top';
+  for(const [k,t] of RULES_CONTENT){
+    if(k==='h'){ cy+=13; ctx.fillStyle=THEME.gold; ctx.font="700 16px 'Fredoka',sans-serif"; ctx.fillText(t, x+padX, cy); cy+=24; }
+    else if(k==='b'){ ctx.fillStyle='#e7ddcc'; ctx.font="600 13px 'Space Grotesk',sans-serif"; ctx.fillText('•', x+padX+2, cy); cy=wrapText(t, x+padX+16, cy, cw-16, 17)+5; }
+    else if(k==='s'){ cy+=14; ctx.fillStyle=THEME.gold; ctx.font="700 14px 'Fredoka',sans-serif"; ctx.textAlign='center'; ctx.fillText(t, x+w/2, cy); ctx.textAlign='left'; cy+=24; }
+    else { ctx.fillStyle=THEME.sub; ctx.font="500 13px 'Space Grotesk',sans-serif"; cy=wrapText(t, x+padX, cy, cw, 17)+6; }
+  }
+  ctx.restore();
+  const totalH=cy-startY;
+  rulesScrollMax=Math.max(0, totalH-areaH+8);
+  if(rulesScroll>rulesScrollMax) rulesScroll=rulesScrollMax;
+  if(rulesScroll<0) rulesScroll=0;
+  if(rulesScrollMax>0){                                        // barre de défilement
+    const trackH=areaH-8, thumbH=Math.max(28, trackH*areaH/totalH), thumbY=top+4+(trackH-thumbH)*(rulesScrollMax? rulesScroll/rulesScrollMax : 0);
+    roundRect(x+w-13, top+4, 4, trackH, 2); ctx.fillStyle='rgba(255,255,255,0.07)'; ctx.fill();
+    roundRect(x+w-13, thumbY, 4, thumbH, 2); ctx.fillStyle='rgba(255,255,255,0.34)'; ctx.fill();
+    if(rulesScroll<rulesScrollMax-2){ ctx.fillStyle=THEME.sub; ctx.font="600 10px 'Space Grotesk',sans-serif"; ctx.textAlign='center'; ctx.fillText('▾ faites défiler ▾', x+w/2, bot-13); }
   }
 }
 function wrapText(text,x,y,maxW,lh){
@@ -1032,7 +1112,14 @@ function drawMenu(){
   button('mm_play', playX, playY+54, mmHalf, 46, 'Partie rapide', {fill:'rgba(42,127,212,0.16)', color:'#8fc2f5', stroke:THEME.blue, lw:2, glow:THEME.blue, round:16, font:"700 15px 'Fredoka',sans-serif"});
   button('mm_create', playX+mmHalf+mmGap, playY+54, mmHalf, 46, 'Créer une partie', {fill:'rgba(42,127,212,0.10)', color:'#8fc2f5', stroke:THEME.blue, lw:2, round:16, font:"700 14px 'Fredoka',sans-serif"});
   button('nm_play', playX, playY+108, playW, 46, '🔥 UNO No Mercy', {fill:'rgba(228,50,43,0.18)', color:'#ff8a80', stroke:THEME.red, lw:2, glow:THEME.red, round:16, font:"700 16px 'Fredoka',sans-serif"});
-  button('menu_rules', Math.round(W/2-70), playY+164, 140, 30, 'Règles du jeu', {stroke:'rgba(255,255,255,0.18)', font:"600 13px 'Space Grotesk',sans-serif"});
+  const exY=playY+162, exX=playX+10, exS=22;                // extension (optionnelle) — n'a d'effet qu'en No Mercy
+  L.buttons['opt_exp']={x:playX, y:exY-7, w:playW, h:36};
+  checkbox(exX, exY, exS, settings.expansion);
+  ctx.textBaseline='middle'; ctx.textAlign='left';
+  ctx.fillStyle=settings.expansion?'#ff8a80':THEME.sub; ctx.font="600 13px 'Space Grotesk',sans-serif";
+  ctx.fillText("+ Extension Show 'Em (No Mercy)", exX+exS+10, exY+exS/2);
+  ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  button('menu_rules', Math.round(W/2-70), playY+204, 140, 30, 'Règles du jeu', {stroke:'rgba(255,255,255,0.18)', font:"600 13px 'Space Grotesk',sans-serif"});
   button('mute', W-16-44, 12, 44, 34, Sound.muted?'🔇':'🔊', {stroke:'rgba(255,255,255,0.12)'});
 }
 
@@ -1072,6 +1159,169 @@ function draw(){
   if(state.chal && state.phase==='challengePrompt') drawChallenge();
   if(state.over) drawGameOver();
   if(rulesOverlay) drawRules();
+  drawTokens();
+  drawTokenFx();
+  drawFinalReveal();
+}
+let tokenMenuOpen=false;
+function drawTokenFace(face, cx, cy, r){                      // dessine une face de jeton (image, sinon repli)
+  const sp=TOKEN_SPRITE[face];
+  if(SHEET_TOKEN && sp){
+    ctx.save(); ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip();
+    ctx.drawImage(SHEET_TOKEN, sp[0],sp[1],sp[2],sp[3], cx-r,cy-r,r*2,r*2); ctx.restore();
+  } else {
+    ctx.save(); ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.fillStyle=face==='nomercy'?'#8a2617':'#c8102e'; ctx.fill();
+    ctx.fillStyle='#fff'; ctx.font="700 "+Math.round(r*0.85)+"px 'Fredoka',sans-serif"; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(face==='nomercy'?'\u00d72':'7', cx, cy+1); ctx.restore();
+  }
+}
+function drawTokenChoice(){                                   // écran de choix imposé en début de manche
+  if(!state || state.phase!=='tokenChoice') return;
+  ctx.save(); ctx.fillStyle='rgba(6,4,10,0.74)'; ctx.fillRect(0,0,L.W,L.H); ctx.restore();
+  const ow=Math.min(390,L.W-24), oh=254, ox=Math.round(L.W/2-ow/2), oy=Math.round(L.H*0.5-oh/2);
+  ctx.save(); ctx.shadowColor='rgba(0,0,0,0.6)'; ctx.shadowBlur=30; roundRect(ox,oy,ow,oh,18); ctx.fillStyle=THEME.panel; ctx.fill(); ctx.restore();
+  roundRect(ox,oy,ow,oh,18); ctx.strokeStyle=THEME.gold; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle=THEME.gold; ctx.font="700 18px 'Fredoka',sans-serif"; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  ctx.fillText('Choisissez votre jeton', ox+ow/2, oy+32);
+  ctx.fillStyle=THEME.sub; ctx.font="500 11.5px 'Space Grotesk',sans-serif";
+  ctx.fillText('Une seule utilisation pour la manche', ox+ow/2, oy+52);
+  const r=44, cxM=ox+ow*0.28, cxN=ox+ow*0.72, cy=oy+120;
+  L.buttons['tc_mercy']={x:cxM-62, y:oy+66, w:124, h:170};
+  drawTokenFace('mercy', cxM, cy, r);
+  ctx.beginPath(); ctx.arc(cxM,cy,r+3,0,Math.PI*2); ctx.strokeStyle=THEME.gold; ctx.lineWidth=2.5; ctx.stroke();
+  ctx.fillStyle=THEME.gold; ctx.font="700 14px 'Fredoka',sans-serif"; ctx.fillText('Mercy', cxM, cy+r+24);
+  ctx.fillStyle=THEME.sub; ctx.font="500 10.5px 'Space Grotesk',sans-serif"; ctx.fillText('défausse tout', cxM, cy+r+40); ctx.fillText('→ pioche 7', cxM, cy+r+54);
+  L.buttons['tc_nomercy']={x:cxN-62, y:oy+66, w:124, h:170};
+  drawTokenFace('nomercy', cxN, cy, r);
+  ctx.beginPath(); ctx.arc(cxN,cy,r+3,0,Math.PI*2); ctx.strokeStyle=THEME.red; ctx.lineWidth=2.5; ctx.stroke();
+  ctx.fillStyle='#ff8a80'; ctx.font="700 14px 'Fredoka',sans-serif"; ctx.fillText('No Mercy', cxN, cy+r+24);
+  ctx.fillStyle=THEME.sub; ctx.font="500 10.5px 'Space Grotesk',sans-serif"; ctx.fillText('double votre', cxN, cy+r+40); ctx.fillText('prochain +X', cxN, cy+r+54);
+}
+let tokenFx=[];
+function tokenSeatPos(seat){                                  // position/taille du jeton dans la zone du joueur (agrandi, ~taille avatar)
+  const a=L.avatar[seat]; const r=Math.max(24, Math.round(a.h*0.85));
+  let x, y=a.y+a.h/2;
+  if(seat===0) x=r+8;                                        // bas : coin en bas à gauche (évite le gros bouton central)
+  else if(seat===3) x=a.x - r - 9;                           // droite : vers le centre
+  else x=a.x + a.w + r + 9;                                  // gauche/haut : vers le centre
+  x=Math.max(r+4, Math.min(L.W-r-4, x));
+  y=Math.max(r+4, Math.min(L.H-r-4, y));
+  return {x, y, r};
+}
+function animateTokenArrive(seat, face){                      // le jeton se place dans la zone du joueur (60 fps)
+  if(prefersReduced) return;
+  tokenFx.push({seat, face, kind:'arrive', t0:performance.now(), dur:520});
+}
+const TOK_PULSE=1150, TOK_FLY=760, TOK_USE_MS=TOK_PULSE+TOK_FLY;
+function animateTokenUse(seat, face){                         // usage : projecteur → 3 pulsations → envoi au centre (+ son)
+  if(typeof Sound!=='undefined' && Sound.special) Sound.special();
+  if(prefersReduced) return;
+  tokenFx.push({seat, face, kind:'use', t0:performance.now()});
+}
+function drawTokenFx(){
+  if(!tokenFx.length) return;
+  const now=performance.now(), cx=(L.center?L.center.x:L.W/2), cy=(L.center?L.center.y:L.H/2);
+  const eo=p=>1-(1-p)*(1-p), eio=p=>p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+  for(let i=tokenFx.length-1;i>=0;i--){
+    const f=tokenFx[i], t=now-f.t0, dest=tokenSeatPos(f.seat), col=(f.face==='nomercy'?THEME.bad:THEME.gold), ring=(f.face==='nomercy'?THEME.red:THEME.gold);
+    if(f.kind==='arrive'){
+      const p=Math.min(1,t/520), e=eo(p);
+      const x=lerp(cx,dest.x,e), y=lerp(cy,dest.y,e), r=dest.r*(1.7-0.7*e);
+      ctx.save(); ctx.globalAlpha=Math.min(1,p*2.4); drawTokenFace(f.face, x, y, r); ctx.restore();
+      if(p>=1) tokenFx.splice(i,1);
+      continue;
+    }
+    // kind==='use' : 1) projecteur + 3 pulsations dans la zone, 2) envoi au centre
+    const a=L.avatar[f.seat], avCx=a.x+a.w/2, avCy=a.y+a.h/2;
+    const spotCx=(avCx+dest.x)/2, spotCy=(avCy+dest.y)/2, spotR=Math.max(a.w*0.95,96)+dest.r;
+    const spotlight=(alpha)=>{ if(alpha<=0.01) return; const g=ctx.createRadialGradient(spotCx,spotCy,spotR*0.52, spotCx,spotCy,spotR); g.addColorStop(0,'rgba(4,3,8,0)'); g.addColorStop(1,'rgba(4,3,8,'+alpha+')'); ctx.save(); ctx.fillStyle=g; ctx.fillRect(0,0,L.W,L.H); ctx.restore(); };
+    if(t<TOK_PULSE){                                          // phase pulsations (tout sombre sauf le joueur)
+      const pp=t/TOK_PULSE;
+      spotlight(Math.min(1,t/160)*0.74);
+      const pulse=1+0.42*Math.abs(Math.sin(pp*Math.PI*3));   // grossit/dégrossit 3 fois
+      ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=16; drawTokenFace(f.face, dest.x, dest.y, dest.r*pulse); ctx.restore();
+      ctx.beginPath(); ctx.arc(dest.x,dest.y,dest.r*pulse,0,Math.PI*2); ctx.strokeStyle=ring; ctx.lineWidth=2.5; ctx.stroke();
+    } else {                                                  // phase envoi au centre
+      const fp=Math.min(1,(t-TOK_PULSE)/TOK_FLY), e=eio(fp);
+      spotlight((1-fp)*0.74);
+      const x=lerp(dest.x,cx,e), y=lerp(dest.y,cy,e), r=dest.r*(1.42+0.9*e), alpha=1-fp*fp;
+      ctx.save(); ctx.globalAlpha=Math.max(0,alpha); ctx.shadowColor=col; ctx.shadowBlur=18*(1-fp); drawTokenFace(f.face, x, y, r); ctx.restore();
+    }
+    if(t>=TOK_USE_MS) tokenFx.splice(i,1);
+  }
+}
+function drawTokens(){                                        // jetons de chaque joueur dans leur zone
+  if(!state || !state.tokens) return;
+  drawTokenChoice();
+  if(state.over) return;
+  for(let seat=0; seat<4; seat++){
+    const tk=state.tokens[seat]; if(!tk || !tk.face) continue;
+    if(state.eliminated && state.eliminated[seat]) continue;
+    if(tk.used && !tk.armed) continue;                        // utilisé → plus affiché
+    if(tokenFx.some(f=>f.seat===seat && f.kind==='arrive')) continue;   // en cours d'arrivée
+    const pos=tokenSeatPos(seat);
+    const canUse = seat===0 && state.current===0 && state.phase==='human' && !tk.used;
+    const isNo = tk.face==='nomercy';
+    if(seat===0) L.buttons['token']={x:pos.x-pos.r, y:pos.y-pos.r, w:pos.r*2, h:pos.r*2};
+    ctx.save();
+    const ringCol=tk.armed?THEME.bad:(canUse?(isNo?THEME.red:THEME.gold):'rgba(255,255,255,0.28)');
+    if(tk.armed){ ctx.shadowColor=THEME.bad; ctx.shadowBlur=11+5*Math.abs(Math.sin(performance.now()/300)); }
+    else if(canUse){ ctx.shadowColor=isNo?THEME.red:THEME.gold; ctx.shadowBlur=9; }
+    ctx.globalAlpha=(seat!==0 || canUse || tk.armed)?1:0.55;
+    drawTokenFace(tk.face, pos.x, pos.y, pos.r);
+    ctx.restore();
+    ctx.beginPath(); ctx.arc(pos.x,pos.y,pos.r,0,Math.PI*2); ctx.strokeStyle=ringCol; ctx.lineWidth=2.2; ctx.stroke();
+    if(tk.armed && seat!==0) labelPill(pos.x, pos.y-pos.r-8, '+X doublé', 'rgba(20,12,30,0.92)', THEME.bad);
+    else if(canUse && seat!==0) labelPill(pos.x, pos.y-pos.r-8, isNo?'Armer':'Utiliser', 'rgba(0,0,0,0.4)', THEME.sub);
+  }
+  const tk0=state.tokens[0];
+  if(tokenMenuOpen && tk0 && !tk0.used && tk0.face==='mercy' && state.current===0 && state.phase==='human'){   // confirmation Mercy
+    ctx.save(); ctx.fillStyle='rgba(6,4,10,0.62)'; ctx.fillRect(0,0,L.W,L.H); ctx.restore();
+    const ow=Math.min(320,L.W-36), oh=150, ox=Math.round(L.W/2-ow/2), oy=Math.round(L.H*0.46-oh/2);
+    ctx.save(); ctx.shadowColor='rgba(0,0,0,0.55)'; ctx.shadowBlur=26; roundRect(ox,oy,ow,oh,16); ctx.fillStyle=THEME.panel; ctx.fill(); ctx.restore();
+    roundRect(ox,oy,ow,oh,16); ctx.strokeStyle=THEME.gold; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.fillStyle=THEME.gold; ctx.font="700 14px 'Fredoka',sans-serif"; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+    ctx.fillText('Utiliser le Mercy Coin ?', ox+ow/2, oy+30);
+    ctx.fillStyle=THEME.sub; ctx.font="500 11px 'Space Grotesk',sans-serif"; ctx.fillText('Défausser toute votre main et piocher 7', ox+ow/2, oy+50);
+    const bw=(ow-44)/2;
+    button('tok_use', ox+16, oy+72, bw, 44, 'Utiliser', {fill:'rgba(245,197,24,0.18)', color:THEME.gold, stroke:THEME.gold, lw:1.5, round:12, font:"700 14px 'Fredoka',sans-serif"});
+    button('tok_cancel', ox+16+bw+12, oy+72, bw, 44, 'Annuler', {stroke:'rgba(255,255,255,0.25)', round:12, font:"600 13px 'Space Grotesk',sans-serif"});
+  }
+}
+const FINAL_REVEAL_MS=2800;
+let finalRevealFx=null;
+function showFinalReveal(seat, cardsPacked){                  // Attaque Finale : révèle la main du joueur (face visible)
+  finalRevealFx = { seat, cards:(cardsPacked||[]).map(unpackCard), t0:performance.now(), dur:FINAL_REVEAL_MS };
+}
+function drawFinalReveal(){
+  if(!finalRevealFx) return;
+  const t=performance.now()-finalRevealFx.t0, D=finalRevealFx.dur;
+  if(t>=D){ finalRevealFx=null; return; }
+  const cards=finalRevealFx.cards, n=cards.length, eo=p=>1-(1-p)*(1-p);
+  const fade=Math.min(1,t/220)*Math.min(1,Math.max(0,(D-t)/320));
+  ctx.save(); ctx.fillStyle='rgba(4,3,8,'+(0.74*fade)+')'; ctx.fillRect(0,0,L.W,L.H); ctx.restore();
+  const nAct=cards.filter(c=>c.type!=='number').length;
+  ctx.save(); ctx.globalAlpha=fade; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  ctx.fillStyle=THEME.gold; ctx.font="700 "+clamp(Math.round(L.W*0.045),15,22)+"px 'Fredoka',sans-serif";
+  ctx.fillText('💥 '+(finalRevealFx.seat===0?'Vous révélez votre main':NAMES[finalRevealFx.seat]+' révèle sa main'), L.W/2, Math.round(L.H*0.26));
+  ctx.restore();
+  const aw=L.W-40, cw=clamp(aw/(n*0.5+0.6), 34, L.cw*0.92), ch=cw/cardAR(), step=Math.min(cw*0.62,(aw-cw)/Math.max(1,n-1));
+  const totalW=(n-1)*step+cw, sx=L.W/2-totalW/2, cy=Math.round(L.H*0.45);
+  for(let i=0;i<n;i++){
+    const ct=t-i*95; if(ct<0) continue;
+    const p=Math.min(1,ct/260), e=eo(p), yoff=(1-e)*36, cx=sx+i*step+cw/2, cardY=cy-ch/2-yoff;
+    const isAct=cards[i].type!=='number', a=fade*Math.min(1,p*1.7);
+    ctx.save(); ctx.globalAlpha=a; drawCard(spriteKey(cards[i]), cx-cw/2, cardY, cw, ch, 0, {shadow:true}); ctx.restore();
+    ctx.save(); ctx.globalAlpha=a;
+    if(isAct){ ctx.shadowColor=THEME.gold; ctx.shadowBlur=13; roundRect(cx-cw/2, cardY, cw, ch, cw*0.09); ctx.strokeStyle=THEME.gold; ctx.lineWidth=3.5; ctx.stroke(); }
+    else { roundRect(cx-cw/2, cardY, cw, ch, cw*0.09); ctx.fillStyle='rgba(6,4,10,0.55)'; ctx.fill(); ctx.fillStyle='#ff6b6b'; ctx.font="700 "+Math.round(cw*0.5)+"px 'Fredoka',sans-serif"; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('✕', cx, cardY+ch/2); }
+    ctx.restore();
+  }
+  ctx.save(); ctx.globalAlpha=fade; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  ctx.fillStyle='#fff'; ctx.font="700 "+clamp(Math.round(L.W*0.05),16,24)+"px 'Fredoka',sans-serif";
+  ctx.fillText(nAct+' carte'+(nAct>1?'s':'')+' Action/Joker', L.W/2, cy+ch/2+34);
+  ctx.restore();
 }
 function drawSwapFx(){
   if(!state || !state.swapFx) return;
@@ -1140,8 +1390,13 @@ function onDown(e){
   if(e.cancelable) e.preventDefault();
 
   if(hitBtn('mute',x,y)){ Sound.toggle(); return; }
-  if(rulesOverlay){ rulesOverlay=false; return; }              // un clic ferme les règles
-  if(hitBtn('rules',x,y) || hitBtn('menu_rules',x,y)){ rulesOverlay=true; return; }
+  if(rulesOverlay){
+    if(hitBtn('rules_close',x,y)){ rulesOverlay=false; rulesScroll=0; return; }
+    const R=rulesRect();
+    if(x>=R.x && x<=R.x+R.w && y>=R.y && y<=R.y+R.h){ rulesDrag={y0:y, s0:rulesScroll}; return; }   // dans le panneau → défilement
+    rulesOverlay=false; rulesScroll=0; return;                  // clic dehors → ferme
+  }
+  if(hitBtn('rules',x,y) || hitBtn('menu_rules',x,y)){ rulesOverlay=true; rulesScroll=0; return; }
   if(state && state.dealing){ skipDeal=true; return; }         // accélère la distribution
 
   // MENU de création de partie (+ écrans réseau par-dessus)
@@ -1158,12 +1413,14 @@ function onDown(e){
         if(hitBtn('rule_stack',x,y)){ settings.nomercy=false; settings.stacking=true; Sound.play(); lobbyBroadcast(); return; }
         if(hitBtn('rule_nomercy',x,y)){ settings.nomercy=true; settings.stacking=true; settings.target=1000; settings.targetSet=true; Sound.play(); lobbyBroadcast(); return; }
         if(!settings.nomercy && settings.stacking && hitBtn('rule_mix',x,y)){ settings.mix=!settings.mix; Sound.play(); lobbyBroadcast(); return; }
+        if(settings.nomercy && hitBtn('rule_exp',x,y)){ settings.expansion=!settings.expansion; Sound.play(); lobbyBroadcast(); return; }
         if(hitBtn('rule_slider',x,y)){ dragSlider=true; Sound.play(); setSliderFromX(x); return; }
         if(hitBtn('net_start',x,y)){ if(NET.players.length>=2) hostStartMatch(); return; }
       }
       return;
     }
     if(hitBtn('opt_stack',x,y)){ settings.stacking=!settings.stacking; Sound.play(); return; }
+    if(hitBtn('opt_exp',x,y)){ settings.expansion=!settings.expansion; Sound.play(); return; }
     if(settings.stacking && hitBtn('opt_nomix',x,y)){ settings.mix=false; Sound.play(); return; }
     if(settings.stacking && hitBtn('opt_mix',x,y)){ settings.mix=true; Sound.play(); return; }
     for(let i=0;i<4;i++){ if(hitBtn('tgt_'+i,x,y)){ settings.target=L.buttons['tgt_'+i].val; settings.targetSet=true; Sound.play(); return; } }
@@ -1220,6 +1477,11 @@ function onDown(e){
     if(hitBtn('chal_no',x,y)){ resolvePending(false); return; }
     return;
   }
+  if(k==='tokenChoice'){
+    if(hitBtn('tc_mercy',x,y)){ Sound.play(); resolvePending('mercy'); return; }
+    if(hitBtn('tc_nomercy',x,y)){ Sound.play(); resolvePending('nomercy'); return; }
+    return;
+  }
   if(k==='drewPlayable'){
     if(hitBtn('keep',x,y)){ resolvePending({type:'keep'}); return; }
     const idx=hitHumanCard(x,y);
@@ -1227,6 +1489,18 @@ function onDown(e){
     return;
   }
   if(k==='turn'){
+    if(state.tokens && !state.tokens[0].used && state.tokens[0].face){   // jeton (face choisie)
+      if(tokenMenuOpen){                                     // confirmation du Mercy Coin
+        if(hitBtn('tok_use',x,y)){ tokenMenuOpen=false; Sound.play(); resolvePending({type:'token', face:'mercy'}); return; }
+        if(hitBtn('tok_cancel',x,y)){ tokenMenuOpen=false; return; }
+        tokenMenuOpen=false; return;
+      }
+      if(hitBtn('token',x,y) || hitBtn('tokenBtn',x,y)){
+        if(state.tokens[0].face==='nomercy') resolvePending({type:'token', face:'arm'});   // armer / désarmer
+        else tokenMenuOpen=true;                                                            // Mercy → confirmer
+        Sound.play(); return;
+      }
+    }
     if(hitBtn('drawpile',x,y)){ resolvePending({type:'draw'}); return; }
     const idx=hitHumanCard(x,y);
     if(idx>=0){
@@ -1239,6 +1513,7 @@ function onDown(e){
 let dragSlider=false;
 function onMove(e){
   const {x,y}=pos(e);
+  if(rulesDrag){ if(e.cancelable) e.preventDefault(); rulesScroll=Math.max(0, Math.min(rulesScrollMax, rulesDrag.s0 - (y-rulesDrag.y0))); return; }
   if(dragSlider){ if(e.cancelable) e.preventDefault(); setSliderFromX(x); return; }
   if(inMenu){
     const over = hitBtn('play',x,y)||hitBtn('mm_play',x,y)||hitBtn('mm_create',x,y)||hitBtn('nm_play',x,y)||hitBtn('opt_stack',x,y)||hitBtn('menu_rules',x,y)||hitBtn('mute',x,y)||rulesOverlay
@@ -1262,8 +1537,9 @@ cv.addEventListener('mousedown', onDown);
 cv.addEventListener('mousemove', onMove);
 cv.addEventListener('touchstart', onDown, {passive:false});
 cv.addEventListener('touchmove', onMove, {passive:false});
-function onUp(){ dragSlider=false; }
+function onUp(){ dragSlider=false; rulesDrag=null; }
 window.addEventListener('mouseup', onUp);
+cv.addEventListener('wheel', (e)=>{ if(rulesOverlay){ rulesScroll=Math.max(0, Math.min(rulesScrollMax, rulesScroll + e.deltaY)); e.preventDefault(); } }, {passive:false});
 cv.addEventListener('touchend', onUp);
 cv.addEventListener('touchcancel', onUp);
 
@@ -1279,8 +1555,8 @@ window.addEventListener('keydown', e=>{
     else if(k==='s'){ settings.stacking=!settings.stacking; }
     return;
   }
-  // UNO : pré-annonce pendant le tour du joueur
-  if(k==='u' && state && !state.over && state.current===0 && (state.phase==='human'||state.phase==='drewPlayable')){
+  // UNO : pré-annonce seulement quand l'avant-dernière carte est jouable
+  if(k==='u' && canReachUno()){
     if(!state.saidUno[0]){ state.saidUno[0]=true; Sound.uno(); toast('UNO annoncé !'); if(NET.role==='client') NET.send({t:'uno'}); } e.preventDefault(); return;
   }
   // Contestation d'un oubli UNO d'une IA
@@ -1376,7 +1652,7 @@ async function playCardBy(pi, idx){
   // No Mercy : les jokers Draw (+4 inversion, +6, +10) → le JOUEUR choisit la couleur maintenant.
   //            le Joker Roulette ('wild') → c'est le SUIVANT qui choisira (géré dans colorRoulette), pas de choix ici.
   const needsColorPick = state.nomercy
-    ? (card.type==='wildrev4' || card.type==='wild6' || card.type==='wild10')
+    ? (card.type==='wildrev4' || card.type==='wildrev8' || card.type==='wild6' || card.type==='wild10')
     : (card.type==='wild' || card.type==='wild4');
   if(needsColorPick){
     const pk=NAMES[pi], ctl=seatCtl[pi].kind;
@@ -1392,8 +1668,9 @@ async function playCardBy(pi, idx){
     netEmit({ev:'recolor', rot:card._rot, card:packCard(card)});   // met à jour la carte posée (variante colorée)
     broadcastCenter(pk+' a choisi '+COLOR_FR[color]+' !', COLOR_HEX[color], 2400);
   }
-  // couleur à suivre : fixée maintenant sauf pour le Joker Roulette (le suivant la choisira)
-  if(!(state.nomercy && card.type==='wild')) state.currentColor=effColor(card);
+  // couleur à suivre : fixée maintenant sauf pour les Jokers qui choisissent pendant leur effet (Roulette + extension)
+  const picksLater = state.nomercy && (card.type==='wild'||card.type==='wilddiscardall'||card.type==='wildsudden'||card.type==='wildfinal');
+  if(!picksLater) state.currentColor=effColor(card);
   state.phase='resolving';
 
   // victoire ?
@@ -1544,14 +1821,18 @@ async function applyEffectNM(card, pi, colorBefore){
   const t=card.type;
   const dv=drawValue(card);
   if(dv>0){                                                 // toutes les cartes "+X" alimentent la pile empilable
-    state.pendingDraw+=dv; state.pendingUnit=dv;
+    const armed = state.tokens && state.tokens[pi] && state.tokens[pi].armed;   // Jeton No Mercy : double UNIQUEMENT ce +X (pas toute la pile)
+    const add = armed ? dv*2 : dv;
+    state.pendingDraw+=add; state.pendingUnit=dv;
+    if(armed){ state.tokens[pi].armed=false; state.tokens[pi].used=true; netEmit({ev:'tokenuse', seat:pi, face:'nomercy'}); netFlushEventsOnly(); animateTokenUse(pi, 'nomercy'); await sleep(prefersReduced?0:TOK_USE_MS); if(!state) return; broadcastCenter('☠ No Mercy Coin — +'+dv+' doublé en +'+(dv*2)+' !', THEME.bad, 2800); }
     let backToSelf=false;
-    if(t==='wildrev4'){
+    if(t==='wildrev4' || t==='wildrev8'){
       state.dir*=-1;
       backToSelf = (aliveCount()===2);                      // à 2 joueurs : l'inversion saute l'adversaire → la pile revient sur soi
+      const lbl = (t==='wildrev8') ? 'Inversion +8' : 'Inversion +4';
       toast(backToSelf
-        ? ('Inversion +4 (2 joueurs) — la pile de '+state.pendingDraw+' revient sur '+(pi===0?'vous':NAMES[pi]))
-        : ('Inversion +4 · pile de '+state.pendingDraw));
+        ? (lbl+' (2 joueurs) — la pile de '+state.pendingDraw+' revient sur '+(pi===0?'vous':NAMES[pi]))
+        : (lbl+' · pile de '+state.pendingDraw));
     }
     else if(t==='wild6') toast('Joker +6 · pile de '+state.pendingDraw);
     else if(t==='wild10') toast('Joker +10 · pile de '+state.pendingDraw);
@@ -1596,8 +1877,49 @@ async function applyEffectNM(card, pi, colorBefore){
         state.current=nextIdx(pi);
       }
       else if(card.value===7){ await sevenSwap(pi); if(!state) return; }
+      else if(card.value===10){ toast((pi===0?'Vous rejouez':NAMES[pi]+' rejoue')+' (carte 10)'); state.current=pi; }   // extension : carte 10 → rejouer
       else state.current=nextIdx(pi);
       break;
+    case 'wilddiscardall': {                                // Extension — Joker Défausse Tout : couleur à défausser → défausse → couleur de reprise
+      const colA=await pickColorNM(pi, 'choisit la couleur à défausser…'); if(!state) return;
+      const toss=hands[pi].filter(c=>effColor(c)===colA);
+      broadcastCenter((pi===0?'Vous défaussez':NAMES[pi]+' défausse')+' tout le '+COLOR_FR[colA]+' ('+toss.length+')', COLOR_HEX[colA], 2200);
+      toast(NAMES[pi]+' défausse tout le '+COLOR_FR[colA]+' ('+toss.length+')');
+      if(toss.length){ netEmit({ev:'drawall', seat:pi, color:colA, cards:toss.map(packCard)}); netFlushEventsOnly(); await flyCardsToDiscard(pi, toss, {below:true, sound:'special'}); if(!state) return; }
+      if(hands[pi].length===0){ await endGame(pi); return; }
+      const colB=await pickColorNM(pi, 'choisit la couleur de reprise…'); if(!state) return;
+      card.chosenColor=colB; state.currentColor=colB; netEmit({ev:'recolor', card:packCard(card)}); netFlushEventsOnly();
+      state.current=nextIdx(pi); break;
+    }
+    case 'wildsudden': {                                     // Extension — Joker Mort Subite : tous piochent jusqu'à 24 cartes, puis couleur
+      broadcastCenter('\u2620 Mort Subite ! Tout le monde à 24 cartes', THEME.bad, 2800);
+      toast('Mort Subite — tous piochent jusqu\'à 24 cartes');
+      for(const s of aliveRing(state.dir)){ const need=24-hands[s].length; if(need>0){ await drawToHand(s, need, 'effect'); if(!state) return; } }
+      const col=await pickColorNM(pi, 'choisit la nouvelle couleur…'); if(!state) return;
+      card.chosenColor=col; state.currentColor=col; netEmit({ev:'recolor', card:packCard(card)}); netFlushEventsOnly();
+      state.current=nextIdx(pi); break;
+    }
+    case 'wildfinal': {                                      // Extension — Joker Attaque Finale : le suivant passe + pioche 1 par carte Action/Joker (≥7 → 25, autres 5)
+      const n = hands[pi].filter(c => c.type!=='number').length;   // Action ou Joker restantes (les numéros, dont 10, ne comptent pas)
+      const v=nextIdx(pi);
+      netEmit({ev:'reveal_hand', seat:pi, cards:hands[pi].map(packCard)}); netFlushEventsOnly();   // révélation animée chez tous
+      showFinalReveal(pi, hands[pi].map(packCard));
+      broadcastCenter((pi===0?'Vous révélez':NAMES[pi]+' révèle')+' sa main : '+n+' Action/Joker', THEME.gold, FINAL_REVEAL_MS);
+      toast('Attaque Finale — '+NAMES[pi]+' révèle '+n+' carte(s) Action/Joker');
+      await sleep(prefersReduced?0:FINAL_REVEAL_MS); if(!state) return;   // laisse la révélation se dévoiler
+      if(n>=7){
+        broadcastCenter('\ud83d\udca5 ATTAQUE FINALE ! '+(v===0?'Vous piochez':NAMES[v]+' pioche')+' 25 · les autres 5', THEME.bad, 3200);
+        await drawToHand(v,25,'effect'); if(!state) return;
+        for(const s of aliveRing(state.dir)){ if(s!==v && s!==pi){ await drawToHand(s,5,'effect'); if(!state) return; } }
+      } else if(n>0){
+        broadcastCenter((v===0?'Vous piochez':NAMES[v]+' pioche')+' '+n+' et passe', THEME.bad, 2400);
+        await drawToHand(v,n,'effect'); if(!state) return;
+      } else { broadcastCenter((v===0?'Vous passez':NAMES[v]+' passe')+' (0 carte Action)', THEME.gold, 2000); }
+      if(await mercyCheck()) return;                          // élimination (le suivant peut dépasser 25 cartes)
+      const col=await pickColorNM(pi, 'choisit la nouvelle couleur…'); if(!state) return;
+      card.chosenColor=col; state.currentColor=col; netEmit({ev:'recolor', card:packCard(card)}); netFlushEventsOnly();
+      state.current=nextIdx(v); break;                       // le suivant passe son tour
+    }
     default:
       state.current=nextIdx(pi);
   }
@@ -1672,6 +1994,52 @@ async function drawRevealToHand(victim, color){
     if(!state) return drawn.length;
   }
   return drawn.length;
+}
+async function pickColorNM(pi, suffix){                       // choix de couleur (Joker extension) : local/distant/IA + message aux autres joueurs
+  const pk=NAMES[pi], ctl=seatCtl[pi].kind, msg=pk+' '+suffix;
+  let color;
+  if(ctl==='local'){ broadcastCenter(msg, THEME.gold, 20000, true); state.phase='chooseColor'; netFlush(); color=await waitInput('color'); }   // le sélecteur recouvre le message chez le joueur
+  else if(ctl==='remote'){ broadcastCenter(msg, THEME.gold, 20000); state.phase='remoteColor'; color=await waitRemote(pi,'color', c=>COLORS.includes(c), aiChooseColor(hands[pi])); }
+  else { broadcastCenter(msg, THEME.gold, 20000); await sleep(prefersReduced?0:1000); color=aiChooseColor(hands[pi]); }   // l'IA « réfléchit »
+  if(state){ state.phase='resolving'; broadcastCenter('Couleur : '+COLOR_FR[color], COLOR_HEX[color], 1500); }   // remplace le message collant (sinon il traîne 20 s)
+  return color;
+}
+async function chooseTokenFace(pi){                          // un joueur choisit la face de son jeton
+  if(!state.tokens || !state.tokens[pi] || state.tokens[pi].face) return;
+  const ctl=seatCtl[pi].kind; let f;
+  if(ctl==='local'){ state.phase='tokenChoice'; netFlush(); draw(); f=await waitInput('tokenChoice'); }
+  else if(ctl==='remote'){ state.phase='tokenWait'; broadcastCenter(NAMES[pi]+' choisit son jeton…', THEME.gold, 20000); netFlush(); f=await waitRemote(pi,'tokenChoice', v=>v==='mercy'||v==='nomercy', Math.random()<0.5?'mercy':'nomercy'); }
+  else { state.phase='tokenWait'; broadcastCenter(NAMES[pi]+' choisit son jeton…', THEME.gold, 20000); netFlush(); draw(); await sleep(prefersReduced?0:850); f=Math.random()<0.5?'mercy':'nomercy'; }
+  if(!state) return;
+  f=(f==='nomercy'?'nomercy':'mercy'); state.tokens[pi].face=f;
+  netEmit({ev:'tokenface', seat:pi, face:f}); netFlushEventsOnly();   // les clients animent l'arrivée
+  animateTokenArrive(pi, f);
+  if(state) netFlush();
+}
+async function chooseAllTokens(){                            // début de manche : chaque joueur choisit sa face, chacun son tour
+  if(!state.tokens) return;
+  const alive=[0,1,2,3].filter(k=>!(state.eliminated&&state.eliminated[k]));
+  const order=[]; let p=state.current;
+  for(let i=0;i<4 && order.length<alive.length;i++){ if(alive.indexOf(p)>=0 && order.indexOf(p)<0) order.push(p); p=(p+state.dir+4)%4; }
+  for(const pi of order){
+    await chooseTokenFace(pi); if(!state) return;
+    await sleep(prefersReduced?0:420); if(!state) return;
+  }
+  state.phase='resolving'; broadcastCenter('Jetons prêts !', THEME.gold, 1300); netFlush();
+}
+async function useTokenMercy(pi){                             // Jeton Mercy Coin : défausse toute la main puis pioche 7
+  if(!state.tokens || state.tokens[pi].used) return;
+  state.tokens[pi].used=true; state.tokens[pi].armed=false;
+  state.pendingDraw=0; state.pendingKind=null; state.pendingUnit=0;   // Mercy annule aussi une pile de + en cours
+  netEmit({ev:'tokenuse', seat:pi, face:'mercy'}); netFlushEventsOnly();   // anim + son chez tous
+  animateTokenUse(pi, 'mercy');
+  await sleep(prefersReduced?0:TOK_USE_MS); if(!state) return;   // laisse l'animation (projecteur → pulsations → centre) se jouer
+  const toss=hands[pi].slice();
+  broadcastCenter('🪙 Mercy Coin — défausse tout, pioche 7', THEME.gold, 2600);
+  toast(NAMES[pi]+' — Mercy Coin : défausse '+toss.length+' cartes, repioche 7');
+  if(toss.length){ netEmit({ev:'drawall', seat:pi, color:null, cards:toss.map(packCard)}); netFlushEventsOnly(); await flyCardsToDiscard(pi, toss, {below:true, sound:'special'}); if(!state) return; }
+  await drawToHand(pi, 7, 'effect'); if(!state) return;
+  state.current=nextIdx(pi);
 }
 async function colorRoulette(pi){                            // Joker Roulette : le SUIVANT choisit une couleur, révèle jusqu'à la trouver
   const victim=nextIdx(pi);
@@ -1886,9 +2254,13 @@ function aiStackChoice(pi){
 }
 async function aiTurn(pi){
   state.phase='ai'; draw();
+  if(state.tokens && state.tokens[pi] && !state.tokens[pi].face) state.tokens[pi].face=Math.random()<0.5?'mercy':'nomercy';   // face imposée
+  // jeton Mercy : main énorme → tout défausser et repiocher 7
+  if(state.tokens && !state.tokens[pi].used && state.tokens[pi].face==='mercy' && state.pendingDraw===0 && hands[pi].length>=18){ await useTokenMercy(pi); return; }
   // face à une pile de + : relancer si possible, sinon encaisser
   if(state.pendingDraw>0){
     const idx=aiStackChoice(pi);
+    if(idx>=0 && state.tokens && !state.tokens[pi].used && state.tokens[pi].face==='nomercy' && drawValue(hands[pi][idx])>0 && Math.random()<0.35) state.tokens[pi].armed=true;   // jeton No Mercy : double parfois une relance
     await sleep(420);
     if(!state) return;
     if(idx>=0) await playCardBy(pi, idx);
@@ -1917,6 +2289,7 @@ async function aiTurn(pi){
     return;
   }
   const idx=aiPick(pi, playableIdx);
+  if(state.tokens && !state.tokens[pi].used && state.tokens[pi].face==='nomercy' && drawValue(hands[pi][idx])>0 && Math.random()<0.4) state.tokens[pi].armed=true;   // jeton No Mercy : double parfois un +X
   await sleep(320);
   if(!state) return;
   await playCardBy(pi, idx);
@@ -1927,12 +2300,13 @@ async function aiTurn(pi){
    ============================================================ */
 async function humanTurn(){
   const turnToken=runToken;
-  state.phase='human'; state.hoverIdx=-1; state.saidUno[0]=false;   // ré-annonce à chaque tour
+  state.phase='human'; state.hoverIdx=-1; state.saidUno[0]=false; tokenMenuOpen=false;   // ré-annonce à chaque tour
   if(state.vuln && state.vuln.phase==='open') beginVulnWindow(false);  // les IA peuvent contester avant que le joueur agisse
   netFlush(); draw();
   // Aucun coup possible → pioche automatique (on n'auto-pioche pas si une dénonciation « pas dit UNO » est en cours : dénoncer reste une action)
   const accuseOpen = state.vuln && state.vuln.phase==='open' && state.vuln.player!==0;
-  if(!accuseOpen && !seatHasMove(0)){
+  const mercyEscape = state.tokens && !state.tokens[0].used && state.tokens[0].face==='mercy' && hands[0].length>=18;   // grosse main + Mercy dispo → laisser le choix (ne pas auto-piocher)
+  if(!accuseOpen && !seatHasMove(0) && !mercyEscape){
     if(state.vuln && state.vuln.phase==='open') resolveVuln(false,null);
     toast(state.pendingDraw>0 ? 'Aucune relance — vous encaissez la pile' : 'Aucune carte jouable — pioche automatique');
     draw(); await sleep(600);
@@ -1947,6 +2321,11 @@ async function humanTurn(){
     if(act.type==='draw'){
       if(state.pendingDraw>0){ await drawStackAndPass(0); return; }   // encaisser la pile
       await humanDraw(); return;
+    }
+    if(act.type==='token'){                                  // jeton (extension)
+      if(act.face==='mercy'){ await useTokenMercy(0); return; }
+      if(state.tokens && !state.tokens[0].used){ state.tokens[0].armed=!state.tokens[0].armed; toast(state.tokens[0].armed?'Jeton No Mercy armé — votre prochain +X sera doublé':'Jeton désarmé'); }
+      netFlush(); draw(); continue;                          // armé → on rejoue normalement (jouer un +X pour l'appliquer)
     }
     if(act.type==='play'){
       const card=hands[0][act.idx];
@@ -1997,9 +2376,14 @@ async function remoteTurn(pi){
   draw();
   for(let guard=0; guard<40; guard++){
     state.awaitSeat=pi; state.awaitKind='turn'; netFlush();
-    const act=await waitRemote(pi,'turn', a=>a&&(a.type==='draw'||(a.type==='play'&&Number.isInteger(a.idx))), {type:'draw'});
+    const act=await waitRemote(pi,'turn', a=>a&&(a.type==='draw'||(a.type==='play'&&Number.isInteger(a.idx))||(a.type==='token'&&(a.face==='mercy'||a.face==='arm'))), {type:'draw'});
     if(!state) return;
     if(state.vuln && state.vuln.phase==='open') resolveVuln(false,null);
+    if(act.type==='token'){                                  // jeton (extension)
+      if(act.face==='mercy'){ await useTokenMercy(pi); return; }
+      if(state.tokens && !state.tokens[pi].used){ state.tokens[pi].armed=!state.tokens[pi].armed; }
+      netFlush(); continue;
+    }
     if(act.type==='draw'){
       if(state.pendingDraw>0){ await drawStackAndPass(pi); return; }
       await remoteDraw(pi); return;
@@ -2173,10 +2557,11 @@ async function startGame(continueMatch){
   for(let r=0;r<7;r++) for(let p=0;p<4;p++) hands[p].push(drawPile.pop());
   // 1re carte défausse = un chiffre simple (évite les cas particuliers du 1er tour)
   let first=drawPile.pop(), guard=0;
-  while((first.type!=='number' || (nm && (first.value===0||first.value===7))) && guard++<400){ drawPile.unshift(first); shuffle(drawPile); first=drawPile.pop(); }
+  while((first.type!=='number' || (nm && (first.value===0||first.value===7||first.value===10))) && guard++<400){ drawPile.unshift(first); shuffle(drawPile); first=drawPile.pop(); }
   anims=[]; pending=null; inMenu=false; rulesOverlay=false; skipDeal=false; cardPos={};
   state={
-    current:0, dir:1, currentColor:null, nomercy:nm,
+    current:0, dir:1, currentColor:null, nomercy:nm, expansion:(nm && !!settings.expansion),
+    tokens:(nm && !!settings.expansion) ? [0,1,2,3].map(()=>({face:null,used:false,armed:false})) : null,
     phase:'dealing', dealing:true, revealed:[0,0,0,0],
     over:false, winner:-1, hoverIdx:-1,
     turnCounter:0, drewCard:null, chal:null,
@@ -2193,7 +2578,9 @@ async function startGame(continueMatch){
   await dealAnimation(first, myToken);
   if(myToken!==runToken) return;                       // partie annulée (retour menu / nouvelle donne)
   state.currentColor=effColor(first);
-  state.dealing=false; state.phase='human';
+  state.dealing=false;
+  await chooseAllTokens(); if(myToken!==runToken||!state) return;   // choix des jetons en début de manche (chacun son tour)
+  state.phase='human';
   toast('À vous de jouer');
   netFlush();
   gameLoop(myToken);
@@ -2260,12 +2647,13 @@ function rotSeat(real, viewer){ return ((real - viewer) % 4 + 4) % 4; }
 /* ---------- côté hôte : événements + diffusion ---------- */
 function netEmit(ev){ if(NET.role==='host') NET.rawEvs.push(ev); }
 function buildViewFor(viewer){
-  const v={ names:[], counts:[], scores:[], dealing:!!state.dealing, nomercy:!!state.nomercy,
+  const v={ names:[], counts:[], scores:[], dealing:!!state.dealing, nomercy:!!state.nomercy, expansion:!!state.expansion,
     current:rotSeat(state.current,viewer), dir:state.dir, currentColor:state.currentColor,
     top4:discard.slice(-4).map(packCard), drawCount:drawPile.length,
     pendingDraw:state.pendingDraw, pendingKind:state.pendingKind, pendingUnit:state.pendingUnit||0,
     stacking:state.stacking, mix:state.mix, target:state.target,
     elim: state.eliminated ? [0,1,2,3].map(k=>state.eliminated[(viewer+k)%4]) : [false,false,false,false],
+    tokens: state.tokens ? [0,1,2,3].map(k=>({face:state.tokens[(viewer+k)%4].face, used:state.tokens[(viewer+k)%4].used, armed:state.tokens[(viewer+k)%4].armed})) : null,
     myHand:hands[viewer].map(packCard), saidMe:!!state.saidUno[viewer],
     vuln: state.vuln?{player:rotSeat(state.vuln.player,viewer), phase:state.vuln.phase}:null,
     over:state.over, gameWon:state.gameWon, winner:state.winner>=0?rotSeat(state.winner,viewer):-1,
@@ -2320,7 +2708,7 @@ function netRoundStart(first){
     if(!pl.conn) continue;
     const names=[],counts=[],sc=[];
     for(let k=0;k<4;k++){ const r=(pl.seat+k)%4; names.push(NAMES[r]); counts.push(hands[r].length); sc.push(scores[r]); }
-    try{ pl.conn.send({t:'q', evs:[{ev:'roundStart', names, counts, scores:sc, nomercy:!!state.nomercy,
+    try{ pl.conn.send({t:'q', evs:[{ev:'roundStart', names, counts, scores:sc, nomercy:!!state.nomercy, expansion:!!state.expansion,
       myHand:hands[pl.seat].map(packCard), first:packCard(first), drawCount:drawPile.length,
       stacking:state.stacking, mix:state.mix, target:state.target}], view:null}); }catch(err){}
   }
@@ -2519,7 +2907,7 @@ function setSliderFromX(x){
   settings.targetSet=true;
   if(val!==settings.target){ settings.target=val; lobbyBroadcast(); }
 }
-function lobbyRules(){ return {stacking:settings.stacking, mix:settings.mix, target:settings.target, nomercy:!!settings.nomercy}; }
+function lobbyRules(){ return {stacking:settings.stacking, mix:settings.mix, target:settings.target, nomercy:!!settings.nomercy, expansion:!!settings.expansion}; }
 function lobbyBroadcast(){
   const list=NET.players.map(p=>({seat:p.seat,name:p.name}));
   for(const p of NET.players){ if(!p.conn) continue;
@@ -2590,9 +2978,11 @@ function netPredict(kind, val){
     if(kind==='turn'){
       if(val && val.type==='play') predictPlay(val.idx);
       else if(val && val.type==='draw'){ if(state.pendingDraw>0) predictDrawPile(state.pendingDraw); else predictDraw(); }
+      else if(val && val.type==='token' && val.face==='arm'){ if(state.tokens && state.tokens[0]) state.tokens[0].armed=!state.tokens[0].armed; }   // affiche l'armement tout de suite
     } else if(kind==='drewPlayable' && val && val.type==='play') predictPlay(val.idx);
     else if(kind==='color'){ predictRecolor(val); if(state) state.phase='resolving'; }   // referme le sélecteur de couleur tout de suite
     else if(kind==='challenge'){ if(state){ state.chal=null; state.phase='resolving'; } }   // referme le panneau de contestation tout de suite
+    else if(kind==='tokenChoice'){ if(state) state.phase='resolving'; }   // referme l'écran de choix tout de suite
   }catch(e){}
 }
 
@@ -2633,6 +3023,9 @@ async function handleNetEv(ev){
     case 'toast': toastState={msg:ev.msg, t:performance.now()}; live.textContent=ev.msg; break;
     case 'uno': Sound.uno(); break;
     case 'cmsg': if(state){ state.centerMsg={ text:ev.text, color:ev.color, t0:performance.now(), until:performance.now()+(ev.ms||2800) }; } break;
+    case 'tokenface': if(state && state.tokens && state.tokens[ev.seat]){ state.tokens[ev.seat].face=ev.face; animateTokenArrive(ev.seat, ev.face); } break;   // arrivée du jeton
+    case 'reveal_hand': if(state) showFinalReveal(ev.seat, ev.cards); break;   // Attaque Finale : révélation animée
+    case 'tokenuse': if(state){ if(state.tokens && state.tokens[ev.seat]){ state.tokens[ev.seat].used=true; state.tokens[ev.seat].armed=false; } animateTokenUse(ev.seat, ev.face); } break;   // usage : anim + son
     case 'play': if(state) await clientPlay(ev.seat, unpackCard(ev.card)); break;
     case 'recolor': { const c=discard.find(d=>d.id===ev.card.id); if(c){ const u=unpackCard(ev.card); Object.assign(c,u); } break; }
     case 'draw': if(state) await clientDrawAnim(ev.seat, ev.n, ev.cards); break;
@@ -2661,7 +3054,8 @@ async function clientRoundStart(ev){
   hands[0]=ev.myHand.map(unpackCard);
   for(let s=1;s<4;s++){ for(let i=0;i<ev.counts[s];i++) hands[s].push({id:'op'+s+'_'+(CARD_ID++)}); }
   discard=[]; drawPile=[];
-  state={ current:1, dir:1, currentColor:null, nomercy:!!ev.nomercy,
+  state={ current:1, dir:1, currentColor:null, nomercy:!!ev.nomercy, expansion:!!ev.expansion,
+    tokens:!!ev.expansion ? [0,1,2,3].map(()=>({face:null,used:false,armed:false})) : null,
     phase:'dealing', dealing:true, revealed:[0,0,0,0],
     over:false, winner:-1, hoverIdx:-1, turnCounter:0, drewCard:null, chal:null,
     saidUno:[false,false,false,false], vuln:null, centerMsg:null,
@@ -2858,7 +3252,8 @@ function applyView(v){
     }
   }
   discard=v.top4.map(unpackCard);
-  state.nomercy=!!v.nomercy;
+  state.nomercy=!!v.nomercy; state.expansion=!!v.expansion;
+  if(v.tokens) state.tokens=v.tokens.map(t=>({face:t.face, used:t.used, armed:t.armed})); else if('tokens' in v) state.tokens=null;
   if(v.elim && state.eliminated){ for(let k=0;k<4;k++) state.eliminated[k]=v.elim[k]; }
   state.dealing=v.dealing; state.current=v.current; state.dir=v.dir; state.currentColor=v.currentColor;
   state.pendingDraw=v.pendingDraw; state.pendingKind=v.pendingKind; state.pendingUnit=v.pendingUnit||0;
@@ -2877,6 +3272,7 @@ function applyView(v){
     else if(kind==='color') state.phase=(v.await.roulette?'rouletteColor':'chooseColor');
     else if(kind==='challenge'){ state.phase='challengePrompt'; state.chal={by:v.await.chalBy}; }
     else if(kind==='swap'){ state.phase='chooseSwap'; state.swapOptions=v.await.swap||[]; }
+    else if(kind==='tokenChoice') state.phase='tokenChoice';
     if(!pending || pending.kind!==kind) pending={kind, net:true, res:(val)=>{ netPredict(kind, val); NET.send({t:'act', kind, val}); }};
     if(kind==='turn') clientMaybeAutoDraw();
   } else {
@@ -2888,8 +3284,9 @@ function applyView(v){
 function clientMaybeAutoDraw(){
   if(NET.role!=='client' || !pending || pending.kind!=='turn' || !state) return;
   if(state.vuln && state.vuln.phase==='open' && state.vuln.player!==0) return;   // dénoncer reste une action
+  if(state.tokens && !state.tokens[0].used && state.tokens[0].face==='mercy' && hands[0].length>=18) return;   // grosse main + Mercy → choix laissé au joueur
   if(seatHasMove(0)) return;
-  setTimeout(()=>{ if(NET.role==='client' && pending && pending.kind==='turn' && state && !state.over && state.current===0 && !seatHasMove(0)) resolvePending({type:'draw'}); }, 620);
+  setTimeout(()=>{ if(NET.role==='client' && pending && pending.kind==='turn' && state && !state.over && state.current===0 && !seatHasMove(0) && !(state.tokens && !state.tokens[0].used && state.tokens[0].face==='mercy' && hands[0].length>=18)) resolvePending({type:'draw'}); }, 620);
 }
 NET.send=function(msg){ try{ if(NET.conn && NET.conn.open!==false) NET.conn.send(msg); }catch(e){} };
 function clientLost(){
@@ -3009,7 +3406,12 @@ function drawNetScreen(){
         ctx.textBaseline='middle'; ctx.fillStyle=THEME.text; ctx.font="600 13px 'Space Grotesk',sans-serif";
         ctx.fillText('Combiner +2 et +4 (mélange total)', p.x+22+30, mixY+10); ctx.textBaseline='alphabetic';
       } else { delete L.buttons['rule_mix'];
-        if(nmSel){ ctx.fillStyle=THEME.sub; ctx.font="500 11.5px 'Space Grotesk',sans-serif"; ctx.fillText('Éliminations à 25 cartes · +6/+10 · Roulette · Défausse tout', p.x+22, mixY+12); }
+        if(nmSel){
+          L.buttons['rule_exp']={x:p.x+20, y:mixY-3, w:p.w-40, h:26};
+          checkbox(p.x+22, mixY, 20, settings.expansion);
+          ctx.textBaseline='middle'; ctx.fillStyle=settings.expansion?'#ff8a80':THEME.text; ctx.font="600 12.5px 'Space Grotesk',sans-serif";
+          ctx.fillText("+ Extension Show 'Em (24 cartes)", p.x+22+30, mixY+10); ctx.textBaseline='alphabetic';
+        }
       }
       const objY=p.y+300;
       ctx.fillStyle=THEME.gold; ctx.font="700 12px 'Fredoka',sans-serif"; ctx.fillText('POINTS POUR GAGNER', p.x+22, objY);
@@ -3064,6 +3466,8 @@ function boot(){
     requestAnimationFrame(frame);
     inMenu=true;                    // ouvre l'écran de création de partie
     const nm=new Image(); nm.onload=()=>{ SHEET_NM=nm; if(state&&state.nomercy) buildCardCache(); }; nm.src=SHEET_SRC_NM;   // planche No Mercy en tâche de fond
+    const ex=new Image(); ex.onload=()=>{ SHEET_NM_EXP=ex; if(state&&state.nomercy) buildCardCache(); }; ex.src=SHEET_SRC_NM_EXP;   // planche extension en tâche de fond
+    const tk=new Image(); tk.onload=()=>{ SHEET_TOKEN=tk; }; tk.src=SHEET_SRC_TOKEN;   // jetons en tâche de fond
   };
   img.onerror=()=>{ const s=document.querySelector('#boot .s'); if(s) s.textContent='Image introuvable : placez « spritesheetunoclassique.png » dans le dossier « images/ » à côté du jeu.'; };
   img.src=SHEET_SRC;
